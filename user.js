@@ -12,7 +12,7 @@ module.exports = {
 				"password": password
 			},function(err, result){
 				assert.equal(err, null);
-		    	console.log("Saved the user sign up details.");
+		    	console.log("Сохранение данных регистрации пользователя");
 			});
 		});
 	},
@@ -23,11 +23,11 @@ module.exports = {
 			db.collection('user').findOne( { email : username ,password: password 
 			},function(err, result){
 				if(result==null){
-					console.log('returning false')
+					console.log('Возврат false')
 					callback(false)
 				}
 				else{
-					console.log('returning true')
+					console.log('Возврат true')
 					callback(true)
 				}
 			});

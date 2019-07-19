@@ -21,21 +21,24 @@ app.post('/signin', function (req, res) {
       res.send('Success')
     }
     else{
-      res.send('Wrong username pass')
+      res.send('Не верный логин или пароль')
     }
   });
 })
 
 app.post('/signup', function (req, res) {
+  sessions=req.session;
   var name=req.body.name;
   var email=req.body.email;
   var password=req.body.password;
 
   if(name && email && password){
-  	user.signup(name, email, password)
+  	user.signup(name, email, password);
+    sessions.username = email;
+    res.send('Success');
   }
   else{
-  	res.send('Failure');
+  	res.send('Что-то пошло не так');
   }
 })
 
@@ -44,8 +47,8 @@ app.get('/home', function (req, res) {
     res.sendFile(__dirname + '/html/home.html');
   }
   else{
-    res.send('unauthorized');
-  }
+    res.send('Ошибка авторизации');
+  }  
 })
 
 app.listen(7777,function(){

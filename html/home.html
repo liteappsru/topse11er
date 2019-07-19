@@ -6,53 +6,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="liteapps.ru">
-    <link rel="icon" href="../../../../favicon.ico">
-    <title>TopSe11er home page</title>
+    <link rel="icon" href="../../../assets/images/favicon.ico">
+    <title>TopSe11er</title>
     
-    <!--Template based on URL below-->
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
-    <link href="bootstrap.min.css" rel="stylesheet">
-    <link href="jumbotron-narrow.css" rel="stylesheet">
-
-    <!-- Stylesheet here-->
-    <!--<link href="/css/stylesheet.css" rel="stylesheet" type="text/css">-->
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../../assets/vendors/iconfonts/mdi/css/materialdesignicons.css" />
+    <link rel="stylesheet" href="../../../assets/vendors/css/vendor.addons.css" />
+    <!-- endinject -->
+    <!-- vendor css for this page -->
+    <!-- End vendor css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../../assets/css/shared/style.css" />
+    <!-- endinject -->
+    <!-- Layout style -->
+    <link rel="stylesheet" href="../../../assets/css/demo_1/style.css">
+    <!-- Layout style -->
+    <link rel="shortcut icon" href="../../../assets/images/favicon.ico" />
     
     <script src="https://fb.me/react-15.1.0.js"></script>
     <script src="https://fb.me/react-dom-15.1.0.js"></script>
     <script src="https://npmcdn.com/react-router@3.0.2/umd/ReactRouter.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://unpkg.com/babel-core@5.8.38/browser.min.js"></script>
 </head>
     
 <body>
- 
-    <div class="container">
-      <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Гавная</a></li>            
-            <li role="presentation"><a href="#">Выход</a></li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">Заготовка приложения</h3>
-      </div>
- 
-      <div class="jumbotron">
-          
-<!--       <div class="list-group"> <a href="#" class="list-group-item active"> <h4 class="list-group-item-heading">Заголовок элемента списка для примера</h4> <p class="list-group-item-text">Какой-то текст</p> </a> <a href="#" class="list-group-item"> <h4 class="list-group-item-heading">Заголовок элемента списка для примера</h4> <p class="list-group-item-text">Какой-то текст</p> </a> <a href="#" class="list-group-item"> <h4 class="list-group-item-heading">Заголовок элемента списка для примера</h4> <p class="list-group-item-text">Какой-то текст</p> </a> </div>-->
-      </div>
- 
-       
-      <footer class="footer">
-        <p>&copy; 2019 liteapps.ru</p>
-      </footer>
- 
+    <div class="table-responsive">
+      <table class="table table-hover table-sm">
+        <thead>
+          <tr class="solid-header">
+            <th colspan="2" class="pl-4">Customer</th>
+            <th>Order No</th>
+            <th>Purchased On</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+             <td class="pr-0 pl-4">
+               <img class="profile-img img-sm" src="../assets/images/profile/male/image_4.png" alt="profile image">
+             </td>
+             <td class="pl-md-0">
+               <small class="text-black font-weight-medium d-block">Barbara Curtis</small>
+               <span class="text-gray">
+                 <span class="status-indicator rounded-indicator small bg-primary"></span>Account Deactivated </span>
+             </td>
+             <td>
+               <small>8523537435</small>
+             </td>
+             <td> Just Now </td>
+           </tr>
+          <tr>
+             <td class="pr-0 pl-4">
+               <img class="profile-img img-sm" src="../assets/images/profile/male/image_3.png" alt="profile image">
+             </td>
+             <td class="pl-md-0">
+               <small class="text-black font-weight-medium d-block">Charlie Hawkins</small>
+               <span class="text-gray">
+                 <span class="status-indicator rounded-indicator small bg-success"></span>Email Verified </span>
+             </td>
+             <td>
+               <small>9537537436</small>
+             </td>
+             <td> Mar 04, 2018 11:37am </td>
+           </tr>
+          <tr>
+             <td class="pr-0 pl-4">
+               <img class="profile-img img-sm" src="../assets/images/profile/female/image_2.png" alt="profile image">
+             </td>
+             <td class="pl-md-0">
+               <small class="text-black font-weight-medium d-block">Nina Bates</small>
+               <span class="text-gray">
+                 <span class="status-indicator rounded-indicator small bg-warning"></span>Payment On Hold </span>
+             </td>
+             <td>
+               <small>7533567437</small>
+             </td>
+             <td> Mar 13, 2018 9:41am </td>
+           </tr>
+          <tr>
+         <td class="pr-0 pl-4">
+           <img class="profile-img img-sm" src="../assets/images/profile/male/image_10.png" alt="profile image">
+         </td>
+         <td class="pl-md-0">
+           <small class="text-black font-weight-medium d-block">Hester Richards</small>
+           <span class="text-gray">
+             <span class="status-indicator rounded-indicator small bg-success"></span>Email Verified </span>
+         </td>
+         <td>
+           <small>5673467743</small>
+         </td>
+         <td> Feb 21, 2018 8:34am </td>
+       </tr>
+        </tbody>
+      </table>    
     </div>
+    <footer class="footer">
+      <p>&copy; 2019 liteapps.ru</p>
+    </footer>
+    
+    <!-- SCRIPT LOADING START FORM HERE /////////////-->
+    <!-- plugins:js -->
+    <script src="../../../assets/vendors/js/core.js"></script>
+    <script src="../../../assets/vendors/js/vendor.addons.js"></script>
+    <!-- endinject -->
+    <!-- Vendor Js For This Page Ends-->
+    <!-- Vendor Js For This Page Ends-->
+    <!-- build:js -->
+    <script src="../../../assets/js/template.js"></script>
+    <!-- endbuild -->
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script type="text/babel" src="home.jsx">
+	<script type="text/babel" src="main.jsx"></script>
   </body>
 </html>

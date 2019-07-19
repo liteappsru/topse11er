@@ -23,6 +23,9 @@ class Signin extends React.Component {
         if(response.data == 'Success'){
           window.location.assign('http://localhost:7777/home')
         }
+        else {
+            alert(response.data);
+        }          
       })
       .catch(function (error) {
         console.log(error);
@@ -36,21 +39,34 @@ class Signin extends React.Component {
     }
     render() {
       return (
-        <div>
-          <form className="form-signin">
-            <h2 className="form-signin-heading">Please sign in</h2>
-            <label for="inputEmail" className="sr-only">Email address</label>
-            <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email address" required autofocus />
-            <label for="inputPassword" className="sr-only">Password</label>
-            <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Password" required />
-            
-            <button className="btn btn-lg btn-primary btn-block" onClick={this.signIn} type="button">Sign in</button>
-          </form>
-          <div>
-            <Link to="/signup">{'Signup'}</Link>
-          </div>
-        </div>
+        <div className="row">
+          <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+            <div className="grid">
+              <div className="grid-body">
+                <div className="row">
+                  <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                      <form className="form-signin">
+                        <h2 className="form-signin-heading">Вход</h2>
+                          <div className="form-group input-rounded">
+                            <label for="inputEmail" className="sr-only">Email address</label>
+                            <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
+                          </div>
+                          <div className="form-group input-rounded">
+                            <label for="inputPassword" className="sr-only">Password</label>
+                            <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control form-group input-rounded" placeholder="Пароль" required />
+                          </div>
 
+                        <button className="btn btn-primary btn-block" onClick={this.signIn} type="button">Войти</button>
+                      </form>
+                      <div>
+                        <Link to="/signup">{'Регистрация'}</Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>  
+          </div>        
       )
     }
 }
@@ -85,6 +101,12 @@ class Signup extends React.Component{
     })
     .then(function (response) {
       console.log(response);
+      if(response.data == 'Success'){
+        window.location.assign('http://localhost:7777/home');        
+      }
+      else{
+        alert(response.data);      
+      }
     })
     .catch(function (error) {
       console.log(error);
@@ -93,30 +115,47 @@ class Signup extends React.Component{
   render() {
       return (
         <div>
-          <form className="form-signin">
-            <h2 className="form-signin-heading">Please sign up</h2>
-            <label for="inputName" className="sr-only">Name</label>
-            <input type="name" onChange={this.handleNameChange} id="inputName" className="form-control" placeholder="Name" required autofocus />
-            <label for="inputEmail" className="sr-only">Email address</label>
-            <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email address" required autofocus />
-            <label for="inputPassword" className="sr-only">Password</label>
-            <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Password" required />
-            
-            <button className="btn btn-lg btn-primary btn-block" onClick={this.signUp} type="button">Sign up</button>
-          </form>
-          <div>
-            <Link to="/">{'Signin'}</Link>
-          </div>
+          <div className="row">
+              <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+                <div className="grid">
+                  <div className="grid-body">
+                    <div className="row">
+                      <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                      <form className="form-signin">
+                        <h2 className="form-signin-heading">Регистрация</h2>
+                        <div className="form-group input-rounded">
+                          <label for="inputName" className="sr-only">Name</label>
+                          <input type="name" onChange={this.handleNameChange} id="inputName" className="form-control" placeholder="Имя пользователя" required autofocus />
+                        </div>
+                        <div className="form-group input-rounded">
+                          <label for="inputEmail" className="sr-only">Email address</label>                          
+                          <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
+                        </div>
+                        <div className="form-group input-rounded">
+                          <label for="inputPassword" className="sr-only">Password</label>
+                          <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Пароль" required />
+                        </div>
+
+                        <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
+                      </form>
+                      <div>
+                        <Link to="/signin">{'Войти'}</Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>          
         </div>
         
       )
   }
 }
 
-
 ReactDOM.render(
     <Router history={hashHistory}>
-        <Route component={Signin} path="/"></Route>
+        <Route component={Signin} path="/signin"></Route>
         <Route component={Signup} path="/signup"></Route>
     </Router>,
 document.getElementById('app'));
