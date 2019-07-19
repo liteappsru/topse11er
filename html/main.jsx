@@ -102,7 +102,7 @@ class Signup extends React.Component{
     .then(function (response) {
       console.log(response);
       if(response.data == 'Success'){
-        window.location.assign('http://localhost:7777/home');        
+        window.location.assign('./home');        
       }
       else{
         alert(response.data);      
