@@ -139,7 +139,7 @@ class Signup extends React.Component{
                         <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
                       </form>
                       <div>
-                        <Link to="/signin">{'Войти'}</Link>
+                        <Link to="/">{'Войти'}</Link>
                       </div>
                     </div>
                   </div>
@@ -155,7 +155,7 @@ class Signup extends React.Component{
 
 ReactDOM.render(
     <Router history={hashHistory}>
-        <Route component={Signin} path="/signin"></Route>
+        <Route component={Signin} path="/"></Route>
         <Route component={Signup} path="/signup"></Route>
     </Router>,
 document.getElementById('app'));
