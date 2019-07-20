@@ -45,16 +45,20 @@ class Signin extends React.Component {
               <div className="grid-body">
                 <div className="row">
                   <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                      <div className="text-center">
+                            <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
+                          <p></p>
+                      </div>
                       <form className="form-signin">
-                        <h2 className="form-signin-heading">Вход</h2>
-                          <div className="form-group input-rounded">
-                            <label for="inputEmail" className="sr-only">Email address</label>
-                            <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
-                          </div>
-                          <div className="form-group input-rounded">
-                            <label for="inputPassword" className="sr-only">Password</label>
-                            <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control form-group input-rounded" placeholder="Пароль" required />
-                          </div>
+                        <h2 className="form-signin-heading">Вход</h2>                          
+                        <div className="form-group input-rounded">
+                          <label for="inputEmail" className="sr-only">Email address</label>
+                          <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
+                        </div>
+                        <div className="form-group input-rounded">
+                          <label for="inputPassword" className="sr-only">Password</label>
+                          <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control form-group input-rounded" placeholder="Пароль" required />
+                        </div>
 
                         <button className="btn btn-primary btn-block" onClick={this.signIn} type="button">Войти</button>
                       </form>
@@ -121,6 +125,10 @@ class Signup extends React.Component{
                   <div className="grid-body">
                     <div className="row">
                       <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                        <div className="text-center">
+                          <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
+                          <p></p>
+                        </div>
                       <form className="form-signin">
                         <h2 className="form-signin-heading">Регистрация</h2>
                         <div className="form-group input-rounded">
