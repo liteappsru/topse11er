@@ -48,9 +48,8 @@ class Signin extends React.Component {
                       <div className="text-center">
                             <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
                           <p></p>
-                      </div>
-                      <form className="form-signin">
-                        <h2 className="form-signin-heading">Вход</h2>                          
+                      </div>                
+                      <form className="form-signin">                        
                         <div className="form-group input-rounded">
                           <label for="inputEmail" className="sr-only">Email address</label>
                           <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
@@ -63,7 +62,10 @@ class Signin extends React.Component {
                         <button className="btn btn-primary btn-block" onClick={this.signIn} type="button">Войти</button>
                       </form>
                       <div>
-                        <Link to="/signup">{'Регистрация'}</Link>
+                        
+                      </div>
+                      <div className="signup-link">
+                        <p><Link to="/signup">{'Регистрация'}</Link></p>                        
                       </div>
                     </div>
                   </div>
@@ -128,9 +130,10 @@ class Signup extends React.Component{
                         <div className="text-center">
                           <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
                           <p></p>
-                        </div>
+                        </div> 
                       <form className="form-signin">
-                        <h2 className="form-signin-heading">Регистрация</h2>
+                        
+                        <p></p>
                         <div className="form-group input-rounded">
                           <label for="inputName" className="sr-only">Name</label>
                           <input type="name" onChange={this.handleNameChange} id="inputName" className="form-control" placeholder="Имя пользователя" required autofocus />
@@ -146,8 +149,9 @@ class Signup extends React.Component{
 
                         <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
                       </form>
-                      <div>
-                        <Link to="/">{'Войти'}</Link>
+                      <p></p>
+                      <div className="signup-link">
+                        <p><Link to="/">{'Войти'}</Link></p>                        
                       </div>
                     </div>
                   </div>
