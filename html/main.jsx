@@ -65,7 +65,7 @@ class Signin extends React.Component {
                         
                       </div>
                       <div className="signup-link">
-                        <p><Link to="/signup">{'Регистрация'}</Link></p>                        
+                        <p><Link to="/signup">{'Зарегистрироваться'}</Link></p>                        
                       </div>
                     </div>
                   </div>
