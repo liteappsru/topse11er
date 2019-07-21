@@ -1,5 +1,5 @@
 .tslogo {
- font-family: 'Raleway', -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Raleway, "Helvetica Neue", Arial, sans-serif; 
+ font-family: Arial, sans-serif; 
  font-size: 48px;
  display: inline-flex;
 }
@@ -16,6 +16,7 @@
 .tslogoGreen {
  color: #67cb4f;
  display: inline-flex;
+ letter-spacing: -7px;
 }
 
 .tsfooter {
