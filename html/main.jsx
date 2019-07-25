@@ -41,14 +41,14 @@ class Signin extends React.Component {
       return (
         <div className="row">
           <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+              <div className="text-center justify-content-center align-items-center">
+                  <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
+                  <p></p>
+              </div>
             <div className="grid">
               <div className="grid-body">
                 <div className="row">
                   <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
-                      <div className="text-center">
-                            <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
-                          <p></p>
-                      </div>                
                       <form className="form-signin">                        
                         <div className="form-group input-rounded">
                           <label for="inputEmail" className="sr-only">Email address</label>
@@ -123,14 +123,14 @@ class Signup extends React.Component{
         <div>
           <div className="row">
               <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+                  <div className="text-center justify-content-center align-items-center">
+                      <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
+                      <p></p>
+                  </div>
                 <div className="grid">
                   <div className="grid-body">
                     <div className="row">
                       <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
-                        <div className="text-center">
-                          <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
-                          <p></p>
-                        </div> 
                       <form className="form-signin">
                         
                         <p></p>
