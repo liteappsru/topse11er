@@ -3,6 +3,7 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var user = require('./user');
 var session = require('express-session');
+var importjs = require('./import');
 
 var app = express();
 var sessions;
@@ -49,6 +50,10 @@ app.get('/home', function (req, res) {
   else{
     res.send('Ошибка авторизации');
   }  
+})
+
+app.get('/import', function (req, res) {
+  res.send(importjs.doImport());
 })
 
 app.listen(7777,function(){
