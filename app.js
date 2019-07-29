@@ -3,7 +3,8 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var user = require('./user');
 var session = require('express-session');
-var importjs = require('./import');
+var imports = require('./import');
+var reports = require('./reports');
 
 var app = express();
 var sessions;
@@ -43,9 +44,21 @@ app.post('/signup', function (req, res) {
   }
 })
 
+app.post('/report', function (req, res) {
+  sessions=req.session;
+  reports.reportByDay(function(result){
+    if(result){
+      res.send(result)
+    }
+    else{
+      res.send({});
+    }
+  });
+})
+
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
-    res.sendFile(__dirname + '/html/home.html');
+    res.sendFile(__dirname + '/html/reports.html');
   }
   else{
     res.send('Ошибка авторизации');

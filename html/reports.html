@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Topse11er Панель управления</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="assets/vendors/iconfonts/mdi/css/materialdesignicons.css">
+    <!-- endinject -->
+    <!-- vendor css for this page -->
+    <!-- End vendor css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="assets/css/shared/style.css">
+    <link rel="stylesheet" href="assets/tunes/style.css" />
+    <!-- endinject -->
+    <!-- Layout style -->
+    <link rel="stylesheet" href="assets/css/demo_1/style.css">
+    <!-- Layout style -->
+    <link rel="shortcut icon" href="asssets/images/favicon.ico" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <!-- partial:partials/_header.html -->
+<!--    <nav class="t-header">-->
+<!--      -->
+<!--    </nav>-->
+    <!-- partial -->
+    <div class="page-body">
+      <!-- partial:partials/_sidebar.html -->
+      <div class="sidebar">
+        <div class="user-profile">
+          <span class="tslogo">TopSe<span class="tslogoGreen">1<span class="tslogoInv">1</span></span>er</span>
+          <div class="info-wrapper">
+            <p class="user-name">admin</p>
+            <h6 class="display-income">Выручка за сегодня 3,400,00</h6>
+          </div>
+        </div>
+        <ul class="navigation-menu">
+          <li class="nav-category-divider">Главное</li>
+          <li>
+            <a href="pageTemplate.html">
+              <span class="link-title">Панель управления</span>
+              <i class="mdi mdi-gauge link-icon"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#ui-elements" data-toggle="collapse" aria-expanded="false">
+              <span class="link-title">Показатели</span>
+              <i class="mdi mdi-bullseye link-icon"></i>
+            </a>
+            <ul class="collapse navigation-submenu" id="ui-elements">
+              <li>
+                <a href="pages/ui-components/buttons.html">Струдники</a>
+              </li>
+              <li>
+                <a href="pages/ui-components/tables.html">Отделы</a>
+              </li>
+              <li>
+                <a href="pages/ui-components/typography.html">Компания</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+
+      </div>
+      <!-- partial -->
+      <div class="page-content-wrapper" style="margin-top: 0px">
+        <div class="page-content-wrapper-inner">
+          <div class="content-viewport">
+            <div class="row">
+              <div class="col-12 py-5">
+                <h4>Персональная панель управления</h4>
+                <p class="text-gray">Держи руку на пульсе</p>
+              </div>
+            </div>
+            <div class="row">
+              <!-- Styles -->
+              <style>
+                #chartdiv1 {
+                  width: 100%;
+                  height: 500px;
+                }
+
+              </style>
+
+              <!-- Resources -->
+              <script src="https://www.amcharts.com/lib/4/core.js"></script>
+              <script src="https://www.amcharts.com/lib/4/charts.js"></script>
+              <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+
+              <div class="col-md-12 equel-grid">
+                <div class="grid">
+                  <div class="grid-body py-3">
+                    <p class="card-title ml-n1">Продажи по дням</p>
+                  </div>
+
+                  <!-- HTML -->
+                  <div class="table-responsive">
+                    <div class="chartdiv1" style="height: 500px;">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- content viewport ends -->
+        <!-- partial:partials/_footer.html -->
+        <footer class="footer">
+          <div class="row">
+            <div class="col-sm-6 text-center text-sm-right order-sm-1">
+              <ul class="text-gray">
+                <li><a href="#">Правила использования</a></li>
+                <li><a href="#">Политика конфиденциальности</a></li>
+              </ul>
+            </div>
+            <div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0">
+              <small class="text-muted d-block">Copyright © 2019 <a href="http://liteapps.ru" target="_blank">liteapps.ru</a>. Все права защищены</small>
+              <small class="text-gray mt-2">Выпонено с <i class="mdi mdi-heart text-danger"></i></small>
+            </div>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- page content ends -->
+    </div>
+    <!--page body ends -->
+    <!-- SCRIPT LOADING START FORM HERE /////////////-->
+    <!-- plugins:js -->
+    <script src="assets/vendors/js/core.js"></script>
+    <!-- endinject -->
+    <!-- Vendor Js For This Page Ends-->
+    <script src="assets/vendors/apexcharts/apexcharts.min.js"></script>
+    <script src="assets/vendors/chartjs/Chart.min.js"></script>
+    <script src="assets/js/charts/chartjs.addon.js"></script>
+    <!-- Vendor Js For This Page Ends-->
+    <!-- build:js -->
+    <script src="assets/js/template.js"></script>
+
+    <!-- Chart code -->
+    <script>
+      am4core.ready(function() {
+
+// Themes begin
+        am4core.useTheme(am4themes_animated);
+// Themes end
+
+        var chart = am4core.create("chartdiv1", am4charts.XYChart);
+        chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
+
+        chart.data = [{}];
+
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.renderer.grid.template.location = 0;
+        categoryAxis.dataFields.category = "date";
+        categoryAxis.renderer.minGridDistance = 40;
+        categoryAxis.fontSize = 11;
+
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        // valueAxis.min = 0;
+        // valueAxis.max = 24000;
+        valueAxis.strictMinMax = true;
+        valueAxis.renderer.minGridDistance = 30;
+// axis break
+        var axisBreak = valueAxis.axisBreaks.create();
+        axisBreak.startValue = 10000;
+        axisBreak.endValue = 30000;
+        axisBreak.breakSize = 0.005;
+
+// make break expand on hover
+        var hoverState = axisBreak.states.create("hover");
+        hoverState.properties.breakSize = 1;
+        hoverState.properties.opacity = 0.1;
+        hoverState.transitionDuration = 1500;
+
+        axisBreak.defaultState.transitionDuration = 1000;
+
+        var series = chart.series.push(new am4charts.ColumnSeries());
+        series.dataFields.categoryX = "date";
+        series.dataFields.dateX = "date";
+        series.dataFields.valueY = "total";
+        series.columns.template.tooltipText = "{valueY.value}";
+        series.columns.template.tooltipY = 0;
+        series.columns.template.strokeOpacity = 0;
+        series.tooltip.pointerOrientation = "vertical";
+
+// as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
+        series.columns.template.adapter.add("fill", function(fill, target) {
+          return chart.colors.getIndex(target.dataItem.index);
+        });
+
+        //tunes
+        chart.cursor = new am4charts.XYCursor();
+
+        axios.post('/report', {
+        })
+                .then(function (response) {
+                  console.log(response);
+                  if(response){
+                    chart.data = response.data;
+                  }
+                  else{
+                    alert(response.data);
+                  }
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
+      }); // end am4core.ready()
+    </script>
+    <!-- endbuild -->
+  </body>
+</html>
