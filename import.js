@@ -237,4 +237,4 @@ function collect(){
     aggregate();
 }
 
-aggregate();
+collect();
