@@ -29,39 +29,16 @@
       <!-- partial:partials/_sidebar.html -->
       <div class="sidebar">
         <div class="user-profile">
-          <span class="tslogo">TopSe<span class="tslogoGreen">1<span class="tslogoInv">1</span></span>er</span>
+          <div class="info-wrapper d-sm-none d-md-block">
+            <span class="tslogo">TopSe<span class="tslogoGreen">1<span class="tslogoInv">1</span></span>er</span>
+          </div>
           <div class="info-wrapper">
             <p class="user-name">admin</p>
+          </div>
+          <div class="info-wrapper">
             <h6 class="display-income">Выручка за сегодня 3,400,00</h6>
           </div>
         </div>
-        <ul class="navigation-menu">
-          <li class="nav-category-divider">Главное</li>
-          <li>
-            <a href="pageTemplate.html">
-              <span class="link-title">Панель управления</span>
-              <i class="mdi mdi-gauge link-icon"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#ui-elements" data-toggle="collapse" aria-expanded="false">
-              <span class="link-title">Показатели</span>
-              <i class="mdi mdi-bullseye link-icon"></i>
-            </a>
-            <ul class="collapse navigation-submenu" id="ui-elements">
-              <li>
-                <a href="pages/ui-components/buttons.html">Струдники</a>
-              </li>
-              <li>
-                <a href="pages/ui-components/tables.html">Отделы</a>
-              </li>
-              <li>
-                <a href="pages/ui-components/typography.html">Компания</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-
       </div>
       <!-- partial -->
       <div class="page-content-wrapper" style="margin-top: 0px">
@@ -117,7 +94,7 @@
               </ul>
             </div>
             <div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0">
-              <small class="text-muted d-block">Copyright © 2019 <a href="http://liteapps.ru" target="_blank">liteapps.ru</a>. Все права защищены</small>
+              <small class="text-muted d-block">Copyright © 2019 <a href="http://topse11er.ru" target="_blank">topse11er.ru</a>. Все права защищены</small>
               <small class="text-gray mt-2">Выпонено с <i class="mdi mdi-heart text-danger"></i></small>
             </div>
           </div>
@@ -155,19 +132,20 @@
         var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.renderer.grid.template.location = 0;
         categoryAxis.dataFields.category = "date";
-        categoryAxis.renderer.minGridDistance = 40;
+        categoryAxis.renderer.minGridDistance = 30;
         categoryAxis.fontSize = 11;
+        categoryAxis.renderer.labels.template.rotation = 270;
 
         var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
         // valueAxis.min = 0;
         // valueAxis.max = 24000;
         valueAxis.strictMinMax = true;
-        valueAxis.renderer.minGridDistance = 30;
+        valueAxis.renderer.minGridDistance = 20;
 // axis break
         var axisBreak = valueAxis.axisBreaks.create();
         axisBreak.startValue = 10000;
         axisBreak.endValue = 30000;
-        axisBreak.breakSize = 0.005;
+        axisBreak.breakSize = 0.5;
 
 // make break expand on hover
         var hoverState = axisBreak.states.create("hover");
@@ -183,6 +161,9 @@
         series.dataFields.valueY = "total";
         series.columns.template.tooltipText = "{valueY.value}";
         series.columns.template.tooltipY = 0;
+        series.columns.template.column.cornerRadiusTopLeft = 10;
+        series.columns.template.column.cornerRadiusTopRight = 10;
+        series.columns.template.column.fillOpacity = 0.8;
         series.columns.template.strokeOpacity = 0;
         series.tooltip.pointerOrientation = "vertical";
 
@@ -192,7 +173,8 @@
         });
 
         //tunes
-        chart.cursor = new am4charts.XYCursor();
+        //chart.cursor = new am4charts.XYCursor();
+        chart.scrollbarX = new am4core.Scrollbar();
 
         axios.post('/report', {
         })
