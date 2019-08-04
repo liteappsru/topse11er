@@ -3,6 +3,12 @@ let MongoClient = require('mongodb').MongoClient;
 let appConfig = require('./config');
 let aggregator = require('./aggregator');
 
+module.exports = {collect:
+        function (parameters) {
+            collect(parameters);
+        }
+}
+
 var ozonOptions = {
     uri: appConfig.ozon.uri,
     method: appConfig.ozon.method,
@@ -156,6 +162,7 @@ function wbOrderCallback(error, response, body) {
                 }
             }
             client.close();
+            aggregate();
         });
     }
 };
@@ -179,8 +186,8 @@ function aggregate(){
 
 function collect(){
     //request(ozonOptions, ozonAuthCallback);
-    //request(wbAuthOptions, wbAuthCallback);
+    request(wbAuthOptions, wbAuthCallback);
     //aggregate();
 }
 
-collect()
+//collect()
