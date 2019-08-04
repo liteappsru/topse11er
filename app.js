@@ -18,7 +18,7 @@ app.post('/signin', function (req, res) {
   var user_name=req.body.email;
   var password=req.body.password;
 
-  console.log('signin' + name);
+  console.log('signin' + user_name);
   user.validateSignIn(user_name,password,function(result){
     if(result){      
       sessions.username = user_name;
