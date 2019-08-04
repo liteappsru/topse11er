@@ -15,21 +15,21 @@ class Signin extends React.Component {
       };
     }
     signIn(){
-      axios.post('/signin', {
-        email: this.state.email,
-        password: this.state.password
-      })
-      .then(function (response) {
-        if(response.data == 'Success'){
-          window.location.assign('./home')
-        }
-        else {
-            alert(response.data);
-        }          
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+        axios.post('/signin', {
+            email: this.state.email,
+            password: this.state.password
+        })
+        .then(function (response) {
+            if(response.data == 'Success'){
+                window.location.assign('./home')
+            }
+            else {
+                alert(response.data);
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
     }
     handleEmailChange(e){
       this.setState({email:e.target.value})
@@ -38,42 +38,41 @@ class Signin extends React.Component {
       this.setState({password:e.target.value})
     }
     render() {
-      return (
+        return (
         <div className="row">
-          <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
-              <div className="text-center justify-content-center align-items-center">
-                  <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
-                  <p></p>
-              </div>
-            <div className="grid">
-              <div className="grid-body">
-                <div className="row">
-                  <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
-                      <form className="form-signin">                        
-                        <div className="form-group input-rounded">
-                          <label for="inputEmail" className="sr-only">Email address</label>
-                          <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
-                        </div>
-                        <div className="form-group input-rounded">
-                          <label for="inputPassword" className="sr-only">Password</label>
-                          <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control form-group input-rounded" placeholder="Пароль" required />
-                        </div>
-
-                        <button className="btn btn-primary btn-block" onClick={this.signIn} type="button">Войти</button>
-                      </form>
-                      <div>
-                        
-                      </div>
-                      <div className="signup-link">
-                        <p><Link to="/signup">{'Зарегистрироваться'}</Link></p>                        
-                      </div>
-                    </div>
-                  </div>
+            <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+                <div className="text-center justify-content-center align-items-center">
+                    <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
+                    <p></p>
                 </div>
-              </div>
-            </div>  
-          </div>        
-      )
+                <div className="grid">
+                    <div className="grid-body">
+                        <div className="row">
+                            <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                                <form className="form-signin">
+                                    <div className="form-group input-rounded">
+                                        <label for="inputEmail" className="sr-only">Email address</label>
+                                        <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label for="inputPassword" className="sr-only">Password</label>
+                                        <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control form-group input-rounded" placeholder="Пароль" required />
+                                    </div>
+                                    <button className="btn btn-primary btn-block" onClick={this.signIn} type="button">Войти</button>
+                                    <div className="signup-link">
+                                        <p><Link to="/signup">{'Зарегистрироваться'}</Link></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="footer tsfooter">
+                    <p>&copy; 2019 TopSe11er.ru</p>
+                </div>
+            </div>
+        </div>
+        )
     }
 }
 
@@ -121,45 +120,46 @@ class Signup extends React.Component{
   render() {
       return (
         <div>
-          <div className="row">
-              <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
-                  <div className="text-center justify-content-center align-items-center">
-                      <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
-                      <p></p>
-                  </div>
-                <div className="grid">
-                  <div className="grid-body">
-                    <div className="row">
-                      <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
-                      <form className="form-signin">
-                        
+            <div className="row">
+                <div className="col-lg-5 col-md-7 col-sm-9 col-11 mx-auto">
+                    <div className="text-center justify-content-center align-items-center">
+                        <span className="tslogo">TopSe<span className="tslogoGreen">1<span className="tslogoInv">1</span></span>er</span>
                         <p></p>
-                        <div className="form-group input-rounded">
-                          <label for="inputName" className="sr-only">Name</label>
-                          <input type="name" onChange={this.handleNameChange} id="inputName" className="form-control" placeholder="Имя пользователя" required autofocus />
-                        </div>
-                        <div className="form-group input-rounded">
-                          <label for="inputEmail" className="sr-only">Email address</label>                          
-                          <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
-                        </div>
-                        <div className="form-group input-rounded">
-                          <label for="inputPassword" className="sr-only">Password</label>
-                          <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Пароль" required />
-                        </div>
-
-                        <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
-                      </form>
-                      <p></p>
-                      <div className="signup-link">
-                        <p><Link to="/">{'Войти'}</Link></p>                        
-                      </div>
                     </div>
-                  </div>
+                    <div className="grid">
+                        <div className="grid-body">
+                            <div className="row">
+                                <div className="col-lg-7 col-md-8 col-sm-9 col-12 mx-auto form-wrapper">
+                                <form className="form-signin">
+                                    <p></p>
+                                    <div className="form-group input-rounded">
+                                        <label for="inputName" className="sr-only">Name</label>
+                                        <input type="name" onChange={this.handleNameChange} id="inputName" className="form-control" placeholder="Имя пользователя" required autofocus />
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label for="inputEmail" className="sr-only">Email address</label>
+                                        <input type="email" onChange={this.handleEmailChange} id="inputEmail" className="form-control" placeholder="Email" required autofocus />
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label for="inputPassword" className="sr-only">Password</label>
+                                        <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Пароль" required />
+                                    </div>
+                                    <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
+                                    <p></p>
+                                    <div className="signup-link">
+                                        <p><Link to="/">{'Войти'}</Link></p>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="footer tsfooter">
+                        <p>&copy; 2019 TopSe11er.ru</p>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>          
         </div>
+</div>
         
       )
   }

@@ -20,5 +20,8 @@
 }
 
 .tsfooter {
- margin: 25px;    
+ text-align: center;
+ position: page;
+ bottom: 0px;
+ justify-content: center;
 }

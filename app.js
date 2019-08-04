@@ -17,6 +17,8 @@ app.post('/signin', function (req, res) {
   sessions=req.session;
   var user_name=req.body.email;
   var password=req.body.password;
+
+  console.log('signin' + name);
   user.validateSignIn(user_name,password,function(result){
     if(result){      
       sessions.username = user_name;
@@ -34,6 +36,8 @@ app.post('/signup', function (req, res) {
   var email=req.body.email;
   var password=req.body.password;
 
+  console.log('signuo' + name);
+
   if(name && email && password){
   	user.signup(name, email, password);
     sessions.username = email;
@@ -44,9 +48,45 @@ app.post('/signup', function (req, res) {
   }
 })
 
-app.post('/report', function (req, res) {
+app.post('/salesByDay', function (req, res) {
   sessions=req.session;
-  reports.reportByDay(function(result){
+  reports.salesByDay(function(result){
+    if(result){
+      res.send(result)
+    }
+    else{
+      res.send({});
+    }
+  });
+})
+
+app.post('/profitByDay', function (req, res) {
+  sessions=req.session;
+  reports.profitByDay(function(result){
+    if(result){
+      res.send(result)
+    }
+    else{
+      res.send({});
+    }
+  });
+})
+
+app.post('/marginByDay', function (req, res) {
+  sessions=req.session;
+  reports.marginByDay(function(result){
+    if(result){
+      res.send(result)
+    }
+    else{
+      res.send({});
+    }
+  });
+})
+
+app.post('/marginByGoods', function (req, res) {
+  sessions=req.session;
+  reports.salesByDay(function(result){
     if(result){
       res.send(result)
     }
