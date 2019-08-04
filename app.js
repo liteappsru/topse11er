@@ -3,7 +3,7 @@ var path = require("path");
 var bodyParser = require("body-parser");
 var user = require('./user');
 var session = require('express-session');
-var imports = require('./import');
+var importjs = require('./import');
 var reports = require('./reports');
 
 var app = express();
@@ -106,7 +106,7 @@ app.get('/home', function (req, res) {
 })
 
 app.get('/import', function (req, res) {
-  res.send(importjs.doImport());
+  res.send(importjs.collect());
 })
 
 app.listen(7777,function(){
