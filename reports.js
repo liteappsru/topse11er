@@ -1,6 +1,6 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost:27017/topse11er';
 var assert = require('assert');
+let dateFormat = require('dateformat');
 let appConfig = require('./config');
 
 function getData(callback,params){
@@ -27,11 +27,12 @@ function getOrders(callback, params){
         db.collection(params.collection).find({}, function(err,cursor){
             cursor.toArray(function(err, docs){
                 assert.equal(null, err);
-                // for(let i = 0; i<docs.length;i++){
-                //     let el = docs[i];
-                //     el.x = el[params.maping.x];
-                //     el.y = el[params.maping.y];
-                // }
+                for(let i = 0; i<docs.length;i++){
+                    let item = docs[i];
+                    let ts_hms = Date.parse(item.date);
+                    item.date = dateFormat(ts_hms, "yyyy-mm-dd");
+                    //console.log(item.date);
+                }
                 callback(docs);
                 client.close();
             });

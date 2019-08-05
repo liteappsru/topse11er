@@ -122,6 +122,7 @@
                         <th>Кол-во</th>
                         <th>Цена</th>
                         <th>Затраты</th>
+                        <th>Доставка</th>
                       </tr>
                       </thead>
                       <tbody id="salesDetails">
@@ -303,6 +304,9 @@
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
             innHTML += '<small>'+item.cost+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.delivery+'</small>';
             innHTML += '</td>';
             innHTML += '</tr>';
           }
