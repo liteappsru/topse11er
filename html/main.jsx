@@ -25,6 +25,7 @@ class Signin extends React.Component {
             }
             else {
                 alert(response.data);
+                //window.location.assign('./')
             }
         })
         .catch(function (error) {

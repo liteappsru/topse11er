@@ -61,9 +61,26 @@
                 <div class="grid">
                   <div class="grid-body py-3">
                     <p class="card-title ml-n1">Заказы</p>
-                    <div id="salesDetails" style="height: 500px;">
+                  </div>
 
-                    </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover table-sm">
+                      <thead>
+                      <tr class="solid-header">
+                        <th>Дата</th>
+                        <th>Магазин</th>
+                        <th>Артикул</th>
+                        <th>Наименование</th>
+                        <th>Кол-во</th>
+                        <th>Цена</th>
+                        <th>Затраты</th>
+                      </tr>
+                      </thead>
+                      <tbody id="salesDetails">
+<!--                        Заполняется скриптом                        -->
+                      </tbody>
+                    </table>
+
                   </div>
                 </div>
               </div>
@@ -155,8 +172,8 @@
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
     <script src="assets/js/template.js"></script>
 
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script type="text/babel" src="salesDetails.jsx"></script>
+<!--    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>-->
+<!--    <script type="text/babel" src="salesDetails.jsx"></script>-->
     <!-- Chart code -->
     <script>
       function tuneXYChart(chart){
@@ -216,7 +233,7 @@
         axios.post(dataName, {
         })
                 .then(function (response) {
-                  console.log(response);
+                  //console.log(response);
                   if(response){
                     chart.data = response.data;
                   }
@@ -251,6 +268,50 @@
         getChartData(chart,'/marginByGoods');
 
       }); // end am4core.ready()
+    </script>
+
+<!--    <th>Артикул</th>-->
+<!--    <th>Наименование</th>-->
+<!--    <th>Количество</th>-->
+<!--    <th>Цена</th>-->
+<!--    <th>Затраты</th>-->
+    <script>
+      let innHTML = '';
+      axios.post('/orders', {})
+        .then(function (response) {
+          console.log(response);
+          for (let i=0;i<response.data.length; i++){
+            let item = response.data[i];
+            innHTML += '<tr>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.date+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.shop+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.product_id+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.product_name+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.quantity+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.sales+'</small>';
+            innHTML += '</td>';
+            innHTML += '<td class="pr-0 pl-4">';
+            innHTML += '<small>'+item.cost+'</small>';
+            innHTML += '</td>';
+            innHTML += '</tr>';
+          }
+          var container = document.getElementById('salesDetails');
+          container.innerHTML = innHTML;
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
     </script>
   </body>
 </html>

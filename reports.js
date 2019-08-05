@@ -21,6 +21,24 @@ function getData(callback,params){
     });
 }
 
+function getOrders(callback, params){
+    MongoClient.connect(appConfig.url, function(err, client) {
+        const db = client.db(appConfig.dbName);
+        db.collection(params.collection).find({}, function(err,cursor){
+            cursor.toArray(function(err, docs){
+                assert.equal(null, err);
+                // for(let i = 0; i<docs.length;i++){
+                //     let el = docs[i];
+                //     el.x = el[params.maping.x];
+                //     el.y = el[params.maping.y];
+                // }
+                callback(docs);
+                client.close();
+            });
+        });
+    });
+}
+
 module.exports = {
     salesByDay: function(callback){
         params = {
@@ -59,16 +77,18 @@ module.exports = {
                 x:'dim',
                 y:'margin'
             }
-        }
+        };
         getData(callback,params);
+    },
+    orders: function(callback){
+        params = {
+            collection:'sales',
+            maping:{
+                x:'dim',
+                y:'margin'
+            }
+        };
+        getOrders(callback,params);
     }
-    // profitByDay: function(callback){
-    //     reportsalesByDay(callback);
-    // },
-    // marginByDay: function(callback){
-    //     reportsalesByDay(callback);
-    // },
-    // marginByGoods: function(callback){
-    //     reportsalesByDay(callback);
-    // }
+
 }
