@@ -52,7 +52,7 @@ function saveDataByDay(client, docs, parameters){
                         shop:item._id.shop,
                         sales: sales,
                         profit: (sales-costs).toPrecision(6),
-                        marin: ((sales-costs)/costs*100).toPrecision(6),
+                        margin: ((sales-costs)/costs*100).toPrecision(6),
                         costs: costs,
                     }
                 }
