@@ -15,7 +15,6 @@ function getData(callback,params){
                     el.y = el[params.maping.y];
                 }
                 callback(docs);
-                console.log('Получение даных отчета за день');
                 client.close();
             });
         });
