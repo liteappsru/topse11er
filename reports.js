@@ -73,7 +73,7 @@ module.exports = {
     },
     marginByGoods: function(callback){
         params = {
-            collection:'marginByGoods',
+            collection:'goodsByDay',
             maping:{
                 x:'dim',
                 y:'margin'
