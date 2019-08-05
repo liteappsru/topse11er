@@ -50,6 +50,7 @@ app.post('/signup', function (req, res) {
 
 app.post('/salesByDay', function (req, res) {
   sessions=req.session;
+  console.log('salesByDay');
   reports.salesByDay(function(result){
     if(result){
       res.send(result)
@@ -62,6 +63,7 @@ app.post('/salesByDay', function (req, res) {
 
 app.post('/profitByDay', function (req, res) {
   sessions=req.session;
+  console.log('profitByDay');
   reports.profitByDay(function(result){
     if(result){
       res.send(result)
@@ -74,6 +76,7 @@ app.post('/profitByDay', function (req, res) {
 
 app.post('/marginByDay', function (req, res) {
   sessions=req.session;
+  console.log('marginByDay');
   reports.marginByDay(function(result){
     if(result){
       res.send(result)
@@ -86,6 +89,7 @@ app.post('/marginByDay', function (req, res) {
 
 app.post('/marginByGoods', function (req, res) {
   sessions=req.session;
+  console.log('marginByGoods');
   reports.salesByDay(function(result){
     if(result){
       res.send(result)
