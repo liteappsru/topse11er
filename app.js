@@ -100,6 +100,19 @@ app.post('/marginByGoods', function (req, res) {
   });
 })
 
+app.post('/orders', function (req, res) {
+  sessions=req.session;
+  console.log('marginByGoods');
+  reports.orders(function(result){
+    if(result){
+      res.send(result)
+    }
+    else{
+      res.send({});
+    }
+  });
+})
+
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
     res.sendFile(__dirname + '/html/reports.html');
