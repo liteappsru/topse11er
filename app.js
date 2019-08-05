@@ -107,6 +107,7 @@ app.post('/orders', function (req, res) {
 
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
+    console.log('Авторизация пройдена');
     res.sendFile(__dirname + '/html/reports.html');
   }
   else{
