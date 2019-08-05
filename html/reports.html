@@ -138,174 +138,14 @@
 
     <!-- Chart code -->
     <script>
-      am4core.ready(function() {
-
-        // Themes begin
-        am4core.useTheme(am4themes_animated);
-        // Themes end
-
-        var chart1 = am4core.create("chartdiv1", am4charts.XYChart);
-        chart1.hiddenState.properties.opacity = 0; // this creates initial fade-in
-
-        chart1.data = [{}];
-
-        var categoryAxis = chart1.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.dataFields.category = "x";
-        categoryAxis.renderer.minGridDistance = 30;
-        categoryAxis.fontSize = 11;
-        categoryAxis.renderer.labels.template.rotation = 270;
-
-        var valueAxis = chart1.yAxes.push(new am4charts.ValueAxis());
-        // valueAxis.min = 0;
-        // valueAxis.max = 24000;
-        valueAxis.strictMinMax = true;
-        valueAxis.renderer.minGridDistance = 20;
-        // axis break
-        // var axisBreak = valueAxis.axisBreaks.create();
-        // axisBreak.startValue = 10000;
-        // axisBreak.endValue = 30000;
-        // axisBreak.breakSize = 0.05;
-        //
-        // // make break expand on hover
-        // var hoverState = axisBreak.states.create("hover");
-        // hoverState.properties.breakSize = 1;
-        // hoverState.properties.opacity = 0.1;
-        // hoverState.transitionDuration = 1500;
-
-        //axisBreak.defaultState.transitionDuration = 1000;
-
-        var series = chart1.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "x";
-        series.dataFields.dateX = "x";
-        series.dataFields.valueY = "y";
-        series.columns.template.tooltipText = "{valueY.value}";
-        series.columns.template.tooltipY = 0;
-        series.columns.template.column.cornerRadiusTopLeft = 10;
-        series.columns.template.column.cornerRadiusTopRight = 10;
-        series.columns.template.column.fillOpacity = 0.8;
-        series.columns.template.strokeOpacity = 0;
-        series.tooltip.pointerOrientation = "vertical";
-
-// as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-        series.columns.template.adapter.add("fill", function(fill, target) {
-          return chart1.colors.getIndex(target.dataItem.index);
-        });
-
-        //tunes
-        //chart.cursor = new am4charts.XYCursor();
-        chart1.scrollbarX = new am4core.Scrollbar();
-
-        axios.post('/salesByDay', {
-        })
-                .then(function (response) {
-                  console.log(response);
-                  if(response){
-                    chart1.data = response.data;
-                  }
-                  else{
-                    alert(response.data);
-                  }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-
-      }); // end am4core.ready()
-    </script>
-
-    <script>
-      am4core.ready(function() {
-
-        // Themes begin
-        am4core.useTheme(am4themes_animated);
-        // Themes end
-
-        var chart2 = am4core.create("chartdiv2", am4charts.XYChart);
-        chart2.hiddenState.properties.opacity = 0; // this creates initial fade-in
-
-        chart2.data = [{}];
-
-        var categoryAxis = chart2.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.dataFields.category = "date";
-        categoryAxis.renderer.minGridDistance = 30;
-        categoryAxis.fontSize = 11;
-        categoryAxis.renderer.labels.template.rotation = 270;
-
-        var valueAxis = chart2.yAxes.push(new am4charts.ValueAxis());
-        // valueAxis.min = 0;
-        // valueAxis.max = 24000;
-        valueAxis.strictMinMax = true;
-        valueAxis.renderer.minGridDistance = 20;
-        // // axis break
-        // var axisBreak = valueAxis.axisBreaks.create();
-        // axisBreak.startValue = 10000;
-        // axisBreak.endValue = 30000;
-        // axisBreak.breakSize = 0.05;
-        //
-        // // make break expand on hover
-        // var hoverState = axisBreak.states.create("hover");
-        // hoverState.properties.breakSize = 1;
-        // hoverState.properties.opacity = 0.1;
-        // hoverState.transitionDuration = 1500;
-        //
-        // axisBreak.defaultState.transitionDuration = 1000;
-
-        var series = chart2.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "date";
-        series.dataFields.dateX = "date";
-        series.dataFields.valueY = "total";
-        series.columns.template.tooltipText = "{valueY.value}";
-        series.columns.template.tooltipY = 0;
-        series.columns.template.column.cornerRadiusTopLeft = 10;
-        series.columns.template.column.cornerRadiusTopRight = 10;
-        series.columns.template.column.fillOpacity = 0.8;
-        series.columns.template.strokeOpacity = 0;
-        series.tooltip.pointerOrientation = "vertical";
-
-        // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-        series.columns.template.adapter.add("fill", function(fill, target) {
-          return chart2.colors.getIndex(target.dataItem.index);
-        });
-
-        //tunes
-        //chart.cursor = new am4charts.XYCursor();
-        chart2.scrollbarX = new am4core.Scrollbar();
-
-        axios.post('/profitByDay', {
-        })
-                .then(function (response) {
-                  console.log(response);
-                  if(response){
-                    chart2.data = response.data;
-                  }
-                  else{
-                    alert(response.data);
-                  }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-
-      }); // end am4core.ready()
-    </script>
-
-    <script>
-      am4core.ready(function() {
-
-        // Themes begin
-        am4core.useTheme(am4themes_animated);
-        // Themes end
-
-        var chart = am4core.create("chartdiv3", am4charts.XYChart);
+      function tuneXYChart(chart){
         chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
 
         chart.data = [{}];
 
         var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
         categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.dataFields.category = "date";
+        categoryAxis.dataFields.category = "x";
         categoryAxis.renderer.minGridDistance = 30;
         categoryAxis.fontSize = 11;
         categoryAxis.renderer.labels.template.rotation = 270;
@@ -330,9 +170,9 @@
 //         axisBreak.defaultState.transitionDuration = 1000;
 
         var series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "date";
-        series.dataFields.dateX = "date";
-        series.dataFields.valueY = "total";
+        series.dataFields.categoryX = "x";
+        series.dataFields.dateX = "x";
+        series.dataFields.valueY = "y";
         series.columns.template.tooltipText = "{valueY.value}";
         series.columns.template.tooltipY = 0;
         series.columns.template.column.cornerRadiusTopLeft = 10;
@@ -349,8 +189,10 @@
         //tunes
         //chart.cursor = new am4charts.XYCursor();
         chart.scrollbarX = new am4core.Scrollbar();
+      }
 
-        axios.post('/marginByDay', {
+      function getChartDate(chart,dataname){
+        axios.post(dataname, {
         })
                 .then(function (response) {
                   console.log(response);
@@ -364,86 +206,30 @@
                 .catch(function (error) {
                   console.log(error);
                 });
-
-      }); // end am4core.ready()
-    </script>
-
-    <script>
+      }
       am4core.ready(function() {
 
         // Themes begin
         am4core.useTheme(am4themes_animated);
         // Themes end
 
+        var chart = am4core.create("chartdiv1", am4charts.XYChart);
+        tuneXYChart(chart);
+        getChartDate(chart,'/salesByDay');
+
+        var chart = am4core.create("chartdiv2", am4charts.XYChart);
+        tuneXYChart(chart);
+        getChartDate(chart,'/profitByDay');
+
+        var chart = am4core.create("chartdiv3", am4charts.XYChart);
+        tuneXYChart(chart);
+        getChartDate(chart,'/marginByDay');
+
         var chart = am4core.create("chartdiv4", am4charts.XYChart);
-        chart.hiddenState.properties.opacity = 0; // this creates initial fade-in
-
-        chart.data = [{}];
-
-        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-        categoryAxis.renderer.grid.template.location = 0;
-        categoryAxis.dataFields.category = "date";
-        categoryAxis.renderer.minGridDistance = 30;
-        categoryAxis.fontSize = 11;
-        categoryAxis.renderer.labels.template.rotation = 270;
-
-        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-        // valueAxis.min = 0;
-        // valueAxis.max = 24000;
-        valueAxis.strictMinMax = true;
-        valueAxis.renderer.minGridDistance = 20;
-// axis break
-//         var axisBreak = valueAxis.axisBreaks.create();
-//         axisBreak.startValue = 10000;
-//         axisBreak.endValue = 30000;
-//         axisBreak.breakSize = 0.05;
-
-// make break expand on hover
-        //var hoverState = axisBreak.states.create("hover");
-        // hoverState.properties.breakSize = 1;
-        // hoverState.properties.opacity = 0.1;
-        // hoverState.transitionDuration = 1500;
-        //
-        // axisBreak.defaultState.transitionDuration = 1000;
-
-        var series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "date";
-        series.dataFields.dateX = "date";
-        series.dataFields.valueY = "total";
-        series.columns.template.tooltipText = "{valueY.value}";
-        series.columns.template.tooltipY = 0;
-        series.columns.template.column.cornerRadiusTopLeft = 10;
-        series.columns.template.column.cornerRadiusTopRight = 10;
-        series.columns.template.column.fillOpacity = 0.8;
-        series.columns.template.strokeOpacity = 0;
-        series.tooltip.pointerOrientation = "vertical";
-
-// as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
-        series.columns.template.adapter.add("fill", function(fill, target) {
-          return chart.colors.getIndex(target.dataItem.index);
-        });
-
-        //tunes
-        //chart.cursor = new am4charts.XYCursor();
-        chart.scrollbarX = new am4core.Scrollbar();
-
-        axios.post('/marginByGoods', {
-        })
-                .then(function (response) {
-                  console.log(response);
-                  if(response){
-                    chart.data = response.data;
-                  }
-                  else{
-                    alert(response.data);
-                  }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
+        tuneXYChart(chart);
+        getChartDate(chart,'/marginByGoods');
 
       }); // end am4core.ready()
     </script>
-    <!-- endbuild -->
   </body>
 </html>
