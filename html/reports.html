@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="topse11er.ru">
+    <meta name="author" content="liteapps.ru">
     <title>Topse11er Панель управления</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/vendors/iconfonts/mdi/css/materialdesignicons.css">
@@ -17,6 +19,9 @@
     <link rel="stylesheet" href="assets/css/demo_1/style.css">
     <!-- Layout style -->
     <link rel="shortcut icon" href="asssets/images/favicon.ico" />
+    <script src="https://fb.me/react-15.1.0.js"></script>
+    <script src="https://fb.me/react-dom-15.1.0.js"></script>
+    <script src="https://npmcdn.com/react-router@3.0.2/umd/ReactRouter.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
@@ -50,6 +55,20 @@
                 <p class="text-gray">Держи руку на пульсе</p>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-md-12 equel-grid">
+                <div class="grid">
+                  <div class="grid-body py-3">
+                    <p class="card-title ml-n1">Заказы</p>
+                    <div id="salesDetails" style="height: 500px;">
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-md-12 equel-grid">
                 <div class="grid">
@@ -136,6 +155,7 @@
     <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
     <script src="assets/js/template.js"></script>
 
+    <script type="text/babel" src="salesDetails.jsx"></script>
     <!-- Chart code -->
     <script>
       function tuneXYChart(chart){
@@ -191,8 +211,8 @@
         chart.scrollbarX = new am4core.Scrollbar();
       }
 
-      function getChartDate(chart,dataname){
-        axios.post(dataname, {
+      function getChartData(chart,dataName){
+        axios.post(dataName, {
         })
                 .then(function (response) {
                   console.log(response);
@@ -215,19 +235,19 @@
 
         var chart = am4core.create("chartdiv1", am4charts.XYChart);
         tuneXYChart(chart);
-        getChartDate(chart,'/salesByDay');
+        getChartData(chart,'/salesByDay');
 
         var chart = am4core.create("chartdiv2", am4charts.XYChart);
         tuneXYChart(chart);
-        getChartDate(chart,'/profitByDay');
+        getChartData(chart,'/profitByDay');
 
         var chart = am4core.create("chartdiv3", am4charts.XYChart);
         tuneXYChart(chart);
-        getChartDate(chart,'/marginByDay');
+        getChartData(chart,'/marginByDay');
 
         var chart = am4core.create("chartdiv4", am4charts.XYChart);
         tuneXYChart(chart);
-        getChartDate(chart,'/marginByGoods');
+        getChartData(chart,'/marginByGoods');
 
       }); // end am4core.ready()
     </script>
