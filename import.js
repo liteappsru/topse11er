@@ -168,7 +168,7 @@ function wbOrderCallback(error, response, body) {
 };
 
 function aggregate(){
-    const options = [
+    let options = [
         {'$group': {_id: {'date': '$date', 'shop':'$shop'},
                     //shop:'$shop',
                     'sales': {'$sum': '$sales'},
@@ -176,18 +176,33 @@ function aggregate(){
                     'delivery': {'$sum': '$delivery'}
         }}
     ];
-    const parameters = {
+    let parameters = {
         collectionName:'sales',
         options:options,
         putinto:'salesByDay'
+    };
+    aggregator.aggregate(parameters);
+
+    options = [
+        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop'},
+                //shop:'$shop',
+                'sales': {'$sum': '$sales'},
+                'costs': {'$sum': '$cost'},
+                'delivery': {'$sum': '$delivery'}
+            }}
+    ];
+    parameters = {
+        collectionName:'sales',
+        options:options,
+        putinto:'goodsByDay'
     };
     aggregator.aggregate(parameters);
 }
 
 function collect(){
     //request(ozonOptions, ozonAuthCallback);
-    request(wbAuthOptions, wbAuthCallback);
-    //aggregate();
+    //request(wbAuthOptions, wbAuthCallback);
+    aggregate();
 }
 
 //collect()

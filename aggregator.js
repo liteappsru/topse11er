@@ -27,7 +27,12 @@ function onConnect(client, db, parameters){
     cursor.toArray(function (err, docs) {
         assert.equal(null, err);
         console.log(docs);
-        saveDataByDay(client, docs, parameters);
+        if (parameters.putinto == 'goodsByDay'){
+            saveGoodsByDay(client, docs, parameters);
+        }
+        else {
+            saveDataByDay(client, docs, parameters);
+        }
     });
 }
 function saveDataByDay(client, docs, parameters){
@@ -49,6 +54,39 @@ function saveDataByDay(client, docs, parameters){
                 {
                     $set: {
                         dim: date,
+                        shop:item._id.shop,
+                        sales: sales,
+                        profit: (sales-costs).toPrecision(6),
+                        margin: ((sales-costs)/costs*100).toPrecision(6),
+                        costs: costs,
+                    }
+                }
+                , {upsert: true}
+            )
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    client.close();
+}
+
+function saveGoodsByDay(client, docs, parameters){
+    if (!docs){
+        console.log('Нет данных для сохранения');
+        return;
+    }
+
+    const db = client.db(appConfig.dbName);
+    for (var i = 0; i < docs.length; i++) {
+        try {
+            let item = docs[i];
+            let sales = Number.parseFloat(item.sales);
+            let costs = Number.parseFloat(item.costs);
+            db.collection(parameters.putinto).updateOne(
+                {dim: item._id.product_id},
+                {
+                    $set: {
+                        dim: item._id.product_id,
                         shop:item._id.shop,
                         sales: sales,
                         profit: (sales-costs).toPrecision(6),

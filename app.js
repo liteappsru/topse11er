@@ -83,7 +83,7 @@ app.post('/marginByDay', function (req, res) {
 
 app.post('/marginByGoods', function (req, res) {
   sessions=req.session;
-  reports.salesByDay(function(result){
+  reports.marginByGoods(function(result){
     if(result){
       res.send(result)
     }
