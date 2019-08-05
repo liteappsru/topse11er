@@ -105,7 +105,7 @@ class Signup extends React.Component{
       password: this.state.password
     })
     .then(function (response) {
-      console.log(response);
+      //console.log(response);
       if(response.data == 'Success'){
         window.location.assign('./home');        
       }
