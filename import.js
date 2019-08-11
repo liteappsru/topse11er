@@ -179,13 +179,13 @@ function aggregate(){
     let parameters = {
         collectionName:'sales',
         options:options,
-        putinto:'salesByDay'
+        putinto:'salesByDay',
+        callback:afterAggregate
     };
     aggregator.aggregate(parameters);
 
     options = [
         {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop'},
-                //shop:'$shop',
                 'sales': {'$sum': '$sales'},
                 'costs': {'$sum': '$cost'},
                 'delivery': {'$sum': '$delivery'}
@@ -194,9 +194,29 @@ function aggregate(){
     parameters = {
         collectionName:'sales',
         options:options,
-        putinto:'goodsByDay'
+        putinto:'goodsByDay',
+        callback:afterAggregate
     };
     aggregator.aggregate(parameters);
+
+    options = [
+        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop'},
+                'sales': {'$sum': '$sales'},
+                'costs': {'$sum': '$cost'},
+                'delivery': {'$sum': '$delivery'}
+            }}
+    ];
+    parameters = {
+        collectionName:'sales',
+        options:options,
+        putinto:'totals',
+        callback:afterAggregate
+    };
+    aggregator.aggregate(parameters);
+}
+
+function  afterAggregate(docs){
+    console.log(docs);
 }
 
 function collect(){
