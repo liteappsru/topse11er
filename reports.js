@@ -2,11 +2,12 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 let dateFormat = require('dateformat');
 let appConfig = require('./config');
+let tsUser;
 
 function getData(callback,params){
     MongoClient.connect(appConfig.url, function(err, client) {
         const db = client.db(appConfig.dbName);
-        db.collection(params.collection).find({}, function(err,cursor){
+        db.collection(params.collection).find({tsUser:tsUser}, function(err,cursor){
             cursor.toArray(function(err, docs){
                 assert.equal(null, err);
                 for(let i = 0; i<docs.length;i++){
@@ -57,7 +58,8 @@ function getOrders(callback, params){
 }
 
 module.exports = {
-    salesByDay: function(callback){
+    salesByDay: function(_tsUser, callback){
+        tsUser = _tsUser;
         params = {
             collection:'salesByDay',
             maping:{
@@ -67,7 +69,8 @@ module.exports = {
         }
         getData(callback,params);
     },
-    profitByDay: function(callback){
+    profitByDay: function(_tsUser, callback){
+        tsUser = _tsUser;
         params = {
             collection:'salesByDay',
             maping:{
@@ -77,7 +80,8 @@ module.exports = {
         }
         getData(callback,params);
     },
-    marginByDay: function(callback){
+    marginByDay: function(_tsUser, callback){
+        tsUser = _tsUser;
         params = {
             collection:'salesByDay',
             maping:{
@@ -87,7 +91,8 @@ module.exports = {
         }
         getData(callback,params);
     },
-    marginByGoods: function(callback){
+    marginByGoods: function(_tsUser, callback){
+        tsUser = _tsUser;
         params = {
             collection:'goodsByDay',
             maping:{
@@ -97,7 +102,8 @@ module.exports = {
         };
         getData(callback,params);
     },
-    orders: function(callback){
+    orders: function(_tsUser, callback){
+        tsUser = _tsUser;
         params = {
             collection:'sales',
             maping:{

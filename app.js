@@ -52,7 +52,7 @@ app.post('/signup', function (req, res) {
 app.post('/salesByDay', function (req, res) {
   if(sessions && sessions.username){
     console.log('salesByDay');
-    reports.salesByDay(function (result) {
+    reports.salesByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
       } else {
@@ -65,7 +65,7 @@ app.post('/salesByDay', function (req, res) {
 app.post('/profitByDay', function (req, res) {
   if(sessions && sessions.username) {
     console.log('profitByDay');
-    reports.profitByDay(function (result) {
+    reports.profitByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
       } else {
@@ -78,7 +78,7 @@ app.post('/profitByDay', function (req, res) {
 app.post('/marginByDay', function (req, res) {
   if(sessions && sessions.username) {
     console.log('marginByDay');
-    reports.marginByDay(function (result) {
+    reports.marginByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
       } else {
@@ -91,7 +91,7 @@ app.post('/marginByDay', function (req, res) {
 app.post('/marginByGoods', function (req, res) {
   if(sessions && sessions.username) {
     console.log('marginByGoods');
-    reports.marginByGoods(function (result) {
+    reports.marginByGoods(sessions.username, function (result) {
       if (result) {
         res.send(result)
       } else {
@@ -104,7 +104,7 @@ app.post('/marginByGoods', function (req, res) {
 app.post('/orders', function (req, res) {
   if(sessions && sessions.username) {
     console.log('orders');
-    reports.orders(function (result) {
+    reports.orders(sessions.username, function (result) {
       if (result) {
         res.send(result)
       } else {
