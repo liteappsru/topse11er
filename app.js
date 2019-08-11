@@ -1,13 +1,13 @@
-var express = require("express");
-var path = require("path");
-var bodyParser = require("body-parser");
-var user = require('./user');
-var session = require('express-session');
-var importjs = require('./import');
-var reports = require('./reports');
+let express = require("express");
+let path = require("path");
+let bodyParser = require("body-parser");
+let user = require('./user');
+let session = require('express-session');
+let importjs = require('./import');
+let reports = require('./reports');
 
-var app = express();
-var sessions;
+let app = express();
+let sessions;
 
 app.use(express.static(path.join(__dirname,"/html")));
 app.use(session({secret: 'my-secret'}));
@@ -15,8 +15,8 @@ app.use(bodyParser.json());
 
 app.post('/signin', function (req, res) {
   sessions=req.session;
-  var user_name=req.body.email;
-  var password=req.body.password;
+  let user_name=req.body.email;
+  let password=req.body.password;
 
   user.validateSignIn(user_name,password,function(result){
     if(result){      
@@ -27,23 +27,26 @@ app.post('/signin', function (req, res) {
       res.send('Не верный логин или пароль')
     }
   });
-})
+});
 
 app.post('/signup', function (req, res) {
   sessions=req.session;
-  var name=req.body.name;
-  var email=req.body.email;
-  var password=req.body.password;
-
+  let name=req.body.name;
+  let email=req.body.email;
+  let password=req.body.password;
+  let ozonClientId=req.body.ozonClientId;
+  let ozonApiKey=req.body.ozonApiKey;
+  let wbUserName=req.body.wbUserName;
+  let wbPassword=req.body.wbPassword;
   if(name && email && password){
-  	user.signup(name, email, password);
+  	user.signup(name, email, password,ozonClientId,ozonApiKey,wbUserName,wbPassword);
     sessions.username = email;
     res.send('Success');
   }
   else{
   	res.send('Что-то пошло не так');
   }
-})
+});
 
 app.post('/salesByDay', function (req, res) {
   sessions=req.session;
@@ -55,7 +58,7 @@ app.post('/salesByDay', function (req, res) {
       res.send({});
     }
   });
-})
+});
 
 app.post('/profitByDay', function (req, res) {
   sessions=req.session;
@@ -67,7 +70,7 @@ app.post('/profitByDay', function (req, res) {
       res.send({});
     }
   });
-})
+});
 
 app.post('/marginByDay', function (req, res) {
   sessions=req.session;
@@ -79,7 +82,7 @@ app.post('/marginByDay', function (req, res) {
       res.send({});
     }
   });
-})
+});
 
 app.post('/marginByGoods', function (req, res) {
   sessions=req.session;
@@ -91,7 +94,7 @@ app.post('/marginByGoods', function (req, res) {
       res.send({});
     }
   });
-})
+});
 
 app.post('/orders', function (req, res) {
   sessions=req.session;
@@ -103,7 +106,7 @@ app.post('/orders', function (req, res) {
       res.send({});
     }
   });
-})
+});
 
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
@@ -114,12 +117,12 @@ app.get('/home', function (req, res) {
     res.send('Ошибка авторизации');
     //res.sendFile(__dirname + '/html/index.html')
   }  
-})
+});
 
 app.get('/import', function (req, res) {
   res.send(importjs.collect());
-})
+});
 
 app.listen(7777,function(){
     console.log("Started listening on port", 7777);
-})
+});
