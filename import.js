@@ -299,4 +299,6 @@ function collect(_tsUser){
     }
 }
 
+aggregate()
+
 //collect();
