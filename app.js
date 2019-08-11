@@ -21,10 +21,10 @@ app.post('/signin', function (req, res) {
   user.validateSignIn(user_name,password,function(result){
     if(result){      
       sessions.username = user_name;
-      res.send('Success')
+      res.send(user_name + 'Success')
     }
     else{
-      res.send('Не верный логин или пароль')
+      res.send(user_name + ' не верный логин или пароль')
     }
   });
 });
@@ -51,7 +51,7 @@ app.post('/signup', function (req, res) {
 
 app.post('/salesByDay', function (req, res) {
   if(sessions && sessions.username){
-    console.log('salesByDay');
+    console.log(sessions.username + ' salesByDay');
     reports.salesByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
@@ -64,7 +64,7 @@ app.post('/salesByDay', function (req, res) {
 
 app.post('/profitByDay', function (req, res) {
   if(sessions && sessions.username) {
-    console.log('profitByDay');
+    console.log(sessions.username + ' profitByDay');
     reports.profitByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
@@ -77,7 +77,7 @@ app.post('/profitByDay', function (req, res) {
 
 app.post('/marginByDay', function (req, res) {
   if(sessions && sessions.username) {
-    console.log('marginByDay');
+    console.log(sessions.username + ' marginByDay');
     reports.marginByDay(sessions.username, function (result) {
       if (result) {
         res.send(result)
@@ -90,7 +90,7 @@ app.post('/marginByDay', function (req, res) {
 
 app.post('/marginByGoods', function (req, res) {
   if(sessions && sessions.username) {
-    console.log('marginByGoods');
+    console.log(sessions.username + ' marginByGoods');
     reports.marginByGoods(sessions.username, function (result) {
       if (result) {
         res.send(result)
@@ -103,7 +103,7 @@ app.post('/marginByGoods', function (req, res) {
 
 app.post('/orders', function (req, res) {
   if(sessions && sessions.username) {
-    console.log('orders');
+    console.log(sessions.username + ' orders');
     reports.orders(sessions.username, function (result) {
       if (result) {
         res.send(result)
@@ -116,7 +116,7 @@ app.post('/orders', function (req, res) {
 
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
-    console.log('Авторизация пройдена');
+    console.log(sessions.username + ' Авторизация пройдена');
     res.sendFile(__dirname + '/html/reports.html');
   }
   else{
@@ -126,7 +126,7 @@ app.get('/home', function (req, res) {
 
 app.get('/import', function (req, res) {
   if(sessions && sessions.username){
-    console.log('import_test');
+    console.log(sessions.username + ' import');
     res.send(importjs.collect(sessions.username));
   }
   else{

@@ -58,7 +58,15 @@ function ozonAuthCallback(error, response, body) {
     // console.log('statusCode:', response && response.statusCode);
     // console.log('body:', body);
 
+    if (response.statusCode>200){
+        console.log('Ozon. response.statusCode>200 на этапе авторизации')
+        return;
+    }
+
     let order_ids = body.result.order_ids;
+    if (order_ids==undefined){
+        console.log('Ozon. получен неправильный список заказов')
+    }
     let orderid = order_ids[0];
     ozonOptions.method = "GET";
     ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
@@ -77,7 +85,7 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
         return;
     }
     if (response.statusCode>200){
-        console.log('WB. response.statusCode>200')
+        console.log('Ozon. response.statusCode>200 на этапе получения заказов')
         return;
     }
     console.log(order_i);
