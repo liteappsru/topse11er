@@ -1,7 +1,7 @@
-var Router = window.ReactRouter.Router;
-var Route = window.ReactRouter.Route;
-var hashHistory = window.ReactRouter.hashHistory;
-var Link = window.ReactRouter.Link;
+let Router = window.ReactRouter.Router;
+let Route = window.ReactRouter.Route;
+let hashHistory = window.ReactRouter.hashHistory;
+let Link = window.ReactRouter.Link;
 
 class Signin extends React.Component {
     constructor(props) {
@@ -127,13 +127,12 @@ class Signup extends React.Component{
       password: this.state.password,
         ozonClientId:this.state.ozonClientId,
         ozonApiKey:this.state.ozonApiKey,
-        wbUserName:this.state.ozonApiKey,
+        wbUserName:this.state.wbUserName,
         wbPassword:this.state.wbPassword
     })
     .then(function (response) {
-      //console.log(response);
       if(response.data == 'Success'){
-        window.location.assign('./home');        
+        window.location.assign('./home');
       }
       else{
         alert(response.data);      

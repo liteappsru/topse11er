@@ -73,6 +73,13 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
         console.log(body.error);
         return;
     }
+    if (order_ids==undefined){
+        return;
+    }
+    if (response.statusCode>200){
+        console.log('WB. response.statusCode>200')
+        return;
+    }
     console.log(order_i);
     order_i += 1;
     let orderid = order_ids[order_i];
@@ -192,7 +199,7 @@ function wbOrderCallback(error, response, body) {
     let orderid = response.request.headers.orderid;
     console.log('Получение данных.' + "reportId:" + orderid);
     if (response.statusCode>200){
-        console.log('response.statusCode>200')
+        console.log('WB. response.statusCode>200')
         return;
     }
     if (response.statusCode==200) {
@@ -287,7 +294,7 @@ function aggregate(){
 }
 
 function  afterAggregate(docs){
-    console.log(docs);
+    console.log('Вычисления завершены');
 }
 
 function collect(_tsUser){
@@ -295,7 +302,7 @@ function collect(_tsUser){
         console.log(_tsUser);
         tsUser =_tsUser;
         ozonCollect();
-        wbCollect();
+        //wbCollect();
     }
 }
 

@@ -1,10 +1,11 @@
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
-var url = 'mongodb://localhost:27017/topse11er';
+let MongoClient = require('mongodb').MongoClient;
+let assert = require('assert');
+let importjs = require('./import');
+let appConfig = require('./config');
 
 module.exports = {
 	signup: function(name,email,password,ozonClientId,ozonApiKey,wbUserName,wbPassword){
-		MongoClient.connect(url, function(err, client) {
+		MongoClient.connect(appConfig.url, function(err, client) {
 		  	const db = client.db('topse11er');
             db.collection('user').insertOne( {
 				name: name,
@@ -17,11 +18,12 @@ module.exports = {
 			},function(err, result){
 				assert.equal(err, null);
 		    	console.log("Сохранение данных регистрации пользователя");
+				importjs.collect(email);
 			});
 		});
 	},
 	validateSignIn: function(username, password,callback){
-		MongoClient.connect(url, function(err, client){
+		MongoClient.connect(appConfig.url, function(err, client){
 			//console.log(username,password);
             const db = client.db('topse11er');
 			db.collection('user').findOne( { email : username ,password: password 
@@ -37,4 +39,4 @@ module.exports = {
 			});
 		});
 	}
-}
+};
