@@ -6,32 +6,30 @@ let appConfig = require('./config');
 
 module.exports = {aggregate:
     function aggregate(parameters) {
-        connectDb(parameters);
+        MongoClient.connect(appConfig.url, function (err, client){
+            if (err){
+                console.log(err);
+            }
+            else {
+                onConnect(client, parameters);
+            }
+        })
     }
 }
 
-function connectDb(parameters){
-    MongoClient.connect(appConfig.url, function (err, client){
-        if (err){
-            console.log(err);
-        }
-        else {
-            const db = client.db(appConfig.dbName);
-            onConnect(client, db, parameters);
-        }
-    })
-}
-
-function onConnect(client, db, parameters){
+function onConnect(client, parameters){
+    const db = client.db(appConfig.dbName);
     var cursor = db.collection(parameters.collectionName).aggregate(parameters.options);
     cursor.toArray(function (err, docs) {
         assert.equal(null, err);
-        console.log(docs);
         if (parameters.putinto == 'goodsByDay'){
             saveGoodsByDay(client, docs, parameters);
         }
         else {
             saveDataByDay(client, docs, parameters);
+        }
+        if (parameters.callback){
+            parameters.callback(docs);
         }
     });
 }
