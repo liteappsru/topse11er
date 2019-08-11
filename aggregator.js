@@ -1,4 +1,3 @@
-let request = require('request');
 let MongoClient = require('mongodb').MongoClient;
 let assert = require('assert');
 let dateFormat = require('dateformat');
@@ -15,11 +14,11 @@ module.exports = {aggregate:
             }
         })
     }
-}
+};
 
 function onConnect(client, parameters){
     const db = client.db(appConfig.dbName);
-    var cursor = db.collection(parameters.collectionName).aggregate(parameters.options);
+    let cursor = db.collection(parameters.collectionName).aggregate(parameters.options);
     cursor.toArray(function (err, docs) {
         assert.equal(null, err);
         if (parameters.putinto == 'goodsByDay'){
@@ -40,7 +39,7 @@ function saveDataByDay(client, docs, parameters){
     }
 
     const db = client.db(appConfig.dbName);
-    for (var i = 0; i < docs.length; i++) {
+    for (let i = 0; i < docs.length; i++) {
         try {
             let item = docs[i];
             let ts_hms = Date.parse(item._id.date);
@@ -75,7 +74,7 @@ function saveGoodsByDay(client, docs, parameters){
     }
 
     const db = client.db(appConfig.dbName);
-    for (var i = 0; i < docs.length; i++) {
+    for (let i = 0; i < docs.length; i++) {
         try {
             let item = docs[i];
             let sales = Number.parseFloat(item.sales);

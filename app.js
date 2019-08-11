@@ -38,6 +38,7 @@ app.post('/signup', function (req, res) {
   let ozonApiKey=req.body.ozonApiKey;
   let wbUserName=req.body.wbUserName;
   let wbPassword=req.body.wbPassword;
+  console.log(name);
   if(name && email && password){
   	user.signup(name, email, password,ozonClientId,ozonApiKey,wbUserName,wbPassword);
     sessions.username = email;

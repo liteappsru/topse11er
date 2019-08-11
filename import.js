@@ -7,9 +7,9 @@ module.exports = {collect:
         function (parameters) {
             collect(parameters);
         }
-}
+};
 
-var ozonOptions = {
+let ozonOptions = {
     uri: appConfig.ozon.uri,
     method: appConfig.ozon.method,
     body: {
@@ -23,46 +23,32 @@ var ozonOptions = {
     headers: appConfig.ozon.headers
 };
 
-const wbAuthBody = {
-    'UserName':appConfig.wb.wbUserName,
-    'Password':appConfig.wb.wbPassword
-};
-
-const wbAuthOptions = {
-    url: appConfig.wb.uriAuth,
-    method: appConfig.wb.method,
-    body: wbAuthBody,
-    json: true,
-    headers: appConfig.wb.headerAuth,
-    followRedirect: true
-};
-
 function ozonAuthCallback(error, response, body) {
     // console.log('error:', error);
     // console.log('statusCode:', response && response.statusCode);
     // console.log('body:', body);
 
-    for (var i = 0; i<body.result.order_ids.length; i++) {
-        var orderid = body.result.order_ids[i];
-        ozonOptions.method = "GET",
+    for (let i = 0; i<body.result.order_ids.length; i++) {
+        let orderid = body.result.order_ids[i];
+        ozonOptions.method = "GET";
         ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
         ozonOptions.body = "";
         request(ozonOptions, ozonOrderCallback);
     }
-};
+}
 
 function ozonOrderCallback(error, response, body) {
     // console.log('error:', error);
-    for (var i = 0; i<body.result.items.length; i++) {
-        var item = body.result.items[i];
-        var order_time = new Date(body.result.order_time);
+    for (let i = 0; i<body.result.items.length; i++) {
+        let item = body.result.items[i];
+        let order_time = new Date(body.result.order_time);
         order_time.setHours(0);
         order_time.setMinutes(0);
         order_time.setSeconds(0);
         order_time.setMilliseconds(0);
-        var price = Number.parseInt(item.price);
+        let price = Number.parseInt(item.price);
         MongoClient.connect(url, function(err, client) {
-            var db = client.db('topse11er');
+            let db = client.db('topse11er');
             db.collection('sales').updateOne(
                 {"item_id": item.item_id},
                 {$set:{
@@ -79,11 +65,28 @@ function ozonOrderCallback(error, response, body) {
         });
         //console.log('Обновление документа ' + item.item_id);
     }
-};
+}
 
-function wbAuthCallback(error, response, body) {
+function wbCollect() {
+    const wbAuthBody = {
+        'UserName':appConfig.wb.wbUserName,
+        'Password':appConfig.wb.wbPassword
+    };
+
+    const wbAuthOptions = {
+        url: appConfig.wb.uriAuth,
+        method: appConfig.wb.method,
+        body: wbAuthBody,
+        json: true,
+        headers: appConfig.wb.headerAuth,
+        followRedirect: true
+    };
+    request(wbAuthOptions, wbAuthCallback);
+}
+
+function wbAuthCallback(error, response) {
     wbOrderRequest(response.headers['set-cookie']);
-};
+}
 
 function wbOrderRequest(wbCookies){
     for (let i=0; i < appConfig.wb.wbReportIds.length; i++){
@@ -127,11 +130,11 @@ function wbOrderCallback(error, response, body) {
     }
     if (response.statusCode==200) {
         MongoClient.connect(appConfig.url, function (err, client) {
-            var db = client.db(appConfig.dbName);
+            let db = client.db(appConfig.dbName);
             console.log('Всего строк:' + body.data.length);
-            for (var i = 0; i < body.data.length; i++) {
-                var item = body.data[i];
-                var order_time = new Date(item.SaleDate);
+            for (let i = 0; i < body.data.length; i++) {
+                let item = body.data[i];
+                let order_time = new Date(item.SaleDate);
                 order_time.setHours(0);
                 order_time.setMinutes(0);
                 order_time.setSeconds(0);
@@ -165,7 +168,7 @@ function wbOrderCallback(error, response, body) {
             aggregate();
         });
     }
-};
+}
 
 function aggregate(){
     let options = [
@@ -221,8 +224,8 @@ function  afterAggregate(docs){
 
 function collect(){
     //request(ozonOptions, ozonAuthCallback);
-    //request(wbAuthOptions, wbAuthCallback);
-    aggregate();
+    wbCollect();
+    //aggregate();
 }
 
-//collect()
+//collect();
