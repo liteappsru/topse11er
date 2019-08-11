@@ -3,6 +3,7 @@ let MongoClient = require('mongodb').MongoClient;
 let appConfig = require('./config');
 let aggregator = require('./aggregator');
 let connector = require('./connector');
+let tsUser;
 
 module.exports = {collect:
         function (parameters) {
@@ -24,22 +25,68 @@ let ozonOptions = {
     headers: appConfig.ozon.headers
 };
 
+function ozonCollect(){
+    MongoClient.connect(appConfig.url, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db('topse11er');
+        db.collection('user').findOne({email:tsUser}, function(err, result){
+            if(result==null){
+                console.log('Не найдены параметры авторизации');
+                return;
+            }
+            else{
+                ozonOptions.headers["Api-Key"] = result.ozonApiKey;
+                ozonOptions.headers["Client-Id"] = result.ozonClientId;
+
+                request(ozonOptions, function(error, response, body){
+                    ozonAuthCallback(error, response, body);
+                });
+                client.close();
+            }
+        });
+    })
+}
+
 function ozonAuthCallback(error, response, body) {
+    if (body.error){
+        console.log(body.error);
+        return;
+    }
     // console.log('error:', error);
     // console.log('statusCode:', response && response.statusCode);
     // console.log('body:', body);
 
-    for (let i = 0; i<body.result.order_ids.length; i++) {
-        let orderid = body.result.order_ids[i];
+    let order_ids = body.result.order_ids;
+    let orderid = order_ids[0];
+    ozonOptions.method = "GET";
+    ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
+    ozonOptions.body = "";
+    request(ozonOptions, function(error, result, body) {
+        ozonOrderCallback(error, response, body, order_ids, 0);
+    });
+}
+
+function ozonOrderCallback(error, response, body, order_ids, order_i) {
+    if (body.error){
+        console.log(body.error);
+        return;
+    }
+    console.log(order_i);
+    order_i += 1;
+    let orderid = order_ids[order_i];
+    if (orderid) {
         ozonOptions.method = "GET";
         ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
         ozonOptions.body = "";
-        request(ozonOptions, ozonOrderCallback);
+        request(ozonOptions, function(error, result, body) {
+            ozonOrderCallback(error, response, body, order_ids, order_i);
+        });
     }
-}
-
-function ozonOrderCallback(error, response, body) {
-    // console.log('error:', error);
+    else{
+        aggregate();
+    }
     for (let i = 0; i<body.result.items.length; i++) {
         let item = body.result.items[i];
         let order_time = new Date(body.result.order_time);
@@ -48,41 +95,44 @@ function ozonOrderCallback(error, response, body) {
         order_time.setSeconds(0);
         order_time.setMilliseconds(0);
         let price = Number.parseInt(item.price);
-        MongoClient.connect(url, function(err, client) {
+        MongoClient.connect(appConfig.url, function(err, client) {
             let db = client.db('topse11er');
             db.collection('sales').updateOne(
                 {"item_id": item.item_id},
                 {$set:{
-                    "shop": "ozon",
-                    "date": order_time,
-                    "item_id": item.item_id,
-                    "product_id": item.product_id,
-                    "quantity": item.quantity,
-                    "price": Number.parseFloat(item.price)}
+                    tsUser:tsUser,
+                    shop: 'ozon',
+                    date: order_time,
+                    item_id: item.item_id,
+                    product_id: item.product_id,
+                    product_name:'',
+                    quantity: item.quantity,
+                    sales: Number.parseFloat(item.price),
+                    cost: Number.parseFloat(0),
+                    delivery: Number.parseFloat(0)}
                 },
-                {"upsert": true}
+                {'upsert': true}
             );
             client.close();
         });
-        //console.log('Обновление документа ' + item.item_id);
     }
 }
 
 function wbCollect() {
-
     MongoClient.connect(appConfig.url, function (err, client) {
         if (err) {
             console.log(err);
         }
         const db = client.db('topse11er');
-        db.collection('user').findOne({},function(err, result){
+        db.collection('user').findOne({email:tsUser}, function(err, result){
             if(result==null){
-                //callback(false)
+                console.log('Не найдены параметры авторизации');
+                return;
             }
             else{
                 const wbAuthBody = {
-                    'UserName':result.wbUserName,//appConfig.wb.wbUserName,
-                    'Password':result.wbPassword//appConfig.wb.wbPassword
+                    'UserName':result.wbUserName,
+                    'Password':result.wbPassword
                 };
 
                 const wbAuthOptions = {
@@ -93,17 +143,17 @@ function wbCollect() {
                     headers: appConfig.wb.headerAuth,
                     followRedirect: true
                 };
-                request(wbAuthOptions, wbAuthCallback);
+                request(wbAuthOptions, function(error, response){
+                    wbOrderRequest(response);
+                });
+                client.close();
             }
         });
     })
 }
 
-function wbAuthCallback(error, response) {
-    wbOrderRequest(response.headers['set-cookie']);
-}
-
-function wbOrderRequest(wbCookies){
+function wbOrderRequest(response){
+    let wbCookies = response.headers['set-cookie'];
     for (let i=0; i < appConfig.wb.wbReportIds.length; i++){
         let wbOrderBody = {
             "length": -1,
@@ -128,17 +178,19 @@ function wbOrderRequest(wbCookies){
                 orderid:appConfig.wb.wbReportIds[i]}
         };
         console.log('Получение заказов wb.' + "reportId:" + appConfig.wb.wbReportIds[i])
-        request(wbOrdersOptions, wbOrderCallback);
+        request(wbOrdersOptions, function(error, response, body){
+            wbOrderCallback(error, response, body);
+        });
     }
 }
 
 function wbOrderCallback(error, response, body) {
-    let orderid = response.request.headers.orderid;
-    console.log('Получение данных.' + "reportId:" + orderid);
     if (response==undefined){
         console.log('response=undefined')
         return;
     }
+    let orderid = response.request.headers.orderid;
+    console.log('Получение данных.' + "reportId:" + orderid);
     if (response.statusCode>200){
         console.log('response.statusCode>200')
         return;
@@ -161,6 +213,7 @@ function wbOrderCallback(error, response, body) {
                         {"item_id": item_id},
                         {
                             $set: {
+                                tsUser: tsUser,
                                 shop: "wb",
                                 date: order_time,
                                 item_id: item_id,
@@ -187,7 +240,7 @@ function wbOrderCallback(error, response, body) {
 
 function aggregate(){
     let options = [
-        {'$group': {_id: {'date': '$date', 'shop':'$shop'},
+        {'$group': {_id: {'date': '$date', 'shop':'$shop', 'tsUser':'$tsUser'},
                     //shop:'$shop',
                     'sales': {'$sum': '$sales'},
                     'costs': {'$sum': '$cost'},
@@ -203,7 +256,7 @@ function aggregate(){
     aggregator.aggregate(parameters);
 
     options = [
-        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop'},
+        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
                 'sales': {'$sum': '$sales'},
                 'costs': {'$sum': '$cost'},
                 'delivery': {'$sum': '$delivery'}
@@ -218,7 +271,7 @@ function aggregate(){
     aggregator.aggregate(parameters);
 
     options = [
-        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop'},
+        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
                 'sales': {'$sum': '$sales'},
                 'costs': {'$sum': '$cost'},
                 'delivery': {'$sum': '$delivery'}
@@ -237,10 +290,13 @@ function  afterAggregate(docs){
     console.log(docs);
 }
 
-function collect(){
-    //request(ozonOptions, ozonAuthCallback);
-    wbCollect();
-    //aggregate();
+function collect(_tsUser){
+    if (_tsUser){
+        console.log(_tsUser);
+        tsUser =_tsUser;
+        ozonCollect();
+        wbCollect();
+    }
 }
 
-collect();
+//collect();

@@ -26,6 +26,7 @@ function onConnect(client, parameters){
         }
     });
 }
+
 function saveDataByDay(client, docs, parameters){
     if (!docs){
         console.log('Нет данных для сохранения');
@@ -40,15 +41,24 @@ function saveDataByDay(client, docs, parameters){
             let date = dateFormat(ts_hms, "yyyy-mm-dd");
             let sales = Number.parseFloat(item.sales);
             let costs = Number.parseFloat(item.costs);
+            let profit = (sales-costs).toPrecision(6);
+            let margin = 0;
+            if (costs==0){
+                margin = 0
+            }
+            else {
+                margin = ((sales-costs)/costs*100).toPrecision(6);
+            }
             db.collection(parameters.putinto).updateOne(
                 {dim: date},
                 {
                     $set: {
+                        tsUser: item._id.tsUser,
                         dim: date,
                         shop:item._id.shop,
                         sales: sales,
-                        profit: (sales-costs).toPrecision(6),
-                        margin: ((sales-costs)/costs*100).toPrecision(6),
+                        profit: profit,
+                        margin: margin,
                         costs: costs,
                     }
                 }
@@ -73,15 +83,24 @@ function saveGoodsByDay(client, docs, parameters){
             let item = docs[i];
             let sales = Number.parseFloat(item.sales);
             let costs = Number.parseFloat(item.costs);
+            let profit = (sales-costs).toPrecision(6);
+            let margin = 0;
+            if (costs==0){
+                margin = 0
+            }
+            else {
+                margin = ((sales-costs)/costs*100).toPrecision(6);
+            }
             db.collection(parameters.putinto).updateOne(
                 {dim: item._id.product_id},
                 {
                     $set: {
+                        tsUser: item._id.tsUser,
                         dim: item._id.product_id,
                         shop:item._id.shop,
                         sales: sales,
-                        profit: (sales-costs).toPrecision(6),
-                        margin: ((sales-costs)/costs*100).toPrecision(6),
+                        profit: profit,
+                        margin: margin,
                         costs: costs,
                     }
                 }

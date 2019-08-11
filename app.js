@@ -50,63 +50,68 @@ app.post('/signup', function (req, res) {
 });
 
 app.post('/salesByDay', function (req, res) {
-  sessions=req.session;
-  reports.salesByDay(function(result){
-    if(result){
-      res.send(result)
-    }
-    else{
-      res.send({});
-    }
-  });
+  if(sessions && sessions.username){
+    console.log('salesByDay');
+    reports.salesByDay(function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
 });
 
 app.post('/profitByDay', function (req, res) {
-  sessions=req.session;
-  reports.profitByDay(function(result){
-    if(result){
-      res.send(result)
-    }
-    else{
-      res.send({});
-    }
-  });
+  if(sessions && sessions.username) {
+    console.log('profitByDay');
+    reports.profitByDay(function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
 });
 
 app.post('/marginByDay', function (req, res) {
-  sessions=req.session;
-  reports.marginByDay(function(result){
-    if(result){
-      res.send(result)
-    }
-    else{
-      res.send({});
-    }
-  });
+  if(sessions && sessions.username) {
+    console.log('marginByDay');
+    reports.marginByDay(function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
 });
 
 app.post('/marginByGoods', function (req, res) {
-  sessions=req.session;
-  reports.marginByGoods(function(result){
-    if(result){
-      res.send(result)
-    }
-    else{
-      res.send({});
-    }
-  });
+  if(sessions && sessions.username) {
+    console.log('marginByGoods');
+    reports.marginByGoods(function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
 });
 
 app.post('/orders', function (req, res) {
-  sessions=req.session;
-  reports.orders(function(result){
-    if(result){
-      res.send(result)
-    }
-    else{
-      res.send({});
-    }
-  });
+  if(sessions && sessions.username) {
+    console.log('orders');
+    reports.orders(function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
 });
 
 app.get('/home', function (req, res) {
@@ -116,12 +121,17 @@ app.get('/home', function (req, res) {
   }
   else{
     res.send('Ошибка авторизации');
-    //res.sendFile(__dirname + '/html/index.html')
   }  
 });
 
 app.get('/import', function (req, res) {
-  res.send(importjs.collect());
+  if(sessions && sessions.username){
+    console.log('import_test');
+    res.send(importjs.collect(sessions.username));
+  }
+  else{
+    res.send('Не верный логин или пароль')
+  }
 });
 
 app.listen(7777,function(){

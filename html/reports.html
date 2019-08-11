@@ -231,23 +231,21 @@
       }
 
       function getChartData(chart,dataName){
-        axios.post(dataName, {
-        })
-                .then(function (response) {
-                  console.log(response);
-                  if(response){
-                    chart.data = response.data;
-                  }
-                  else{
-                    alert(response.data);
-                  }
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
+          axios.post(dataName, {})
+          .then(function (response) {
+              console.log(response);
+              if(response){
+                  chart.data = response.data;
+              }
+              else{
+                  alert(response.data);
+              }
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
       }
       am4core.ready(function() {
-
         // Themes begin
         am4core.useTheme(am4themes_animated);
         // Themes end
@@ -271,11 +269,6 @@
       }); // end am4core.ready()
     </script>
 
-<!--    <th>Артикул</th>-->
-<!--    <th>Наименование</th>-->
-<!--    <th>Количество</th>-->
-<!--    <th>Цена</th>-->
-<!--    <th>Затраты</th>-->
     <script>
       let innHTML = '';
       axios.post('/orders', {})

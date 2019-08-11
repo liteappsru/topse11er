@@ -22,7 +22,7 @@ module.exports = {
 	},
 	validateSignIn: function(username, password,callback){
 		MongoClient.connect(url, function(err, client){
-			console.log(username,password);
+			//console.log(username,password);
             const db = client.db('topse11er');
 			db.collection('user').findOne( { email : username ,password: password 
 			},function(err, result){
