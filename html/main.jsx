@@ -5,14 +5,14 @@ var Link = window.ReactRouter.Link;
 
 class Signin extends React.Component {
     constructor(props) {
-      super(props);
-      this.signIn = this.signIn.bind(this);
-      this.handleEmailChange = this.handleEmailChange.bind(this);
-      this.handlePasswordChange = this.handlePasswordChange.bind(this);
-      this.state = {
-        email:'',
-        password:''
-      };
+        super(props);
+        this.signIn = this.signIn.bind(this);
+        this.handleEmailChange = this.handleEmailChange.bind(this);
+        this.handlePasswordChange = this.handlePasswordChange.bind(this);
+        this.state = {
+            email:'',
+            password:''
+        };
     }
     signIn(){
         axios.post('/signin', {
@@ -38,6 +38,7 @@ class Signin extends React.Component {
     handlePasswordChange(e){
       this.setState({password:e.target.value})
     }
+
     render() {
         return (
         <div className="row">
@@ -78,32 +79,56 @@ class Signin extends React.Component {
 }
 
 class Signup extends React.Component{
-  constructor(props) {
-    super(props);
-    this.signUp = this.signUp.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.state = {
-      name:'',
-      email:'',
-      password:''
-    };
-  }
-  handleNameChange(e){
-    this.setState({name:e.target.value})
-  }
-  handleEmailChange(e){
-    this.setState({email:e.target.value})
-  }
-  handlePasswordChange(e){
-    this.setState({password:e.target.value})
-  }
+    constructor(props) {
+        super(props);
+        this.signUp = this.signUp.bind(this);
+        this.handleNameChange         = this.handleNameChange.bind(this);
+        this.handleEmailChange        = this.handleEmailChange.bind(this);
+        this.handlePasswordChange     = this.handlePasswordChange.bind(this);
+        this.handleOzonClientIdChange = this.handleOzonClientIdChange.bind(this);
+        this.handleOzonApiKeyChange   = this.handleOzonApiKeyChange.bind(this);
+        this.handleWbUserNameChange   = this.handleWbUserNameChange.bind(this);
+        this.handleWbPasswordChange   = this.handleWbPasswordChange.bind(this);
+        this.state = {
+            name:'',
+            email:'',
+            password:'',
+            ozonClientId:'',
+            ozonApiKey:'',
+            wbUserName:'',
+            wbPassword:''
+        };
+    }
+    handleNameChange(e){
+        this.setState({name:e.target.value})
+    }
+    handleEmailChange(e){
+        this.setState({email:e.target.value})
+    }
+    handlePasswordChange(e){
+        this.setState({password:e.target.value})
+    }
+    handleOzonClientIdChange(e){
+        this.setState({ozonClientId:e.target.value})
+    }
+    handleOzonApiKeyChange(e){
+        this.setState({ozonApiKey:e.target.value})
+    }
+    handleWbUserNameChange(e){
+        this.setState({wbUserName:e.target.value})
+    }
+    handleWbPasswordChange(e){
+        this.setState({wbPassword:e.target.value})
+    }
   signUp(){
     axios.post('/signup', {
       name: this.state.name,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
+        ozonClientId:this.state.ozonClientId,
+        ozonApiKey:this.state.ozonApiKey,
+        wbUserName:this.state.ozonApiKey,
+        wbPassword:this.state.wbPassword
     })
     .then(function (response) {
       //console.log(response);
@@ -144,6 +169,30 @@ class Signup extends React.Component{
                                     <div className="form-group input-rounded">
                                         <label for="inputPassword" className="sr-only">Password</label>
                                         <input type="password" onChange={this.handlePasswordChange} id="inputPassword" className="form-control" placeholder="Пароль" required />
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label htmlFor="inputOzonClientId" className="sr-only">Password</label>
+                                        <input type="text" onChange={this.handleOzonClientIdChange} id="inputOzonClientId"
+                                               className="form-control form-group input-rounded" placeholder="Ozon Client Id"
+                                               required/>
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label htmlFor="inputOzonApiKey" className="sr-only">Password</label>
+                                        <input type="text" onChange={this.handleOzonApiKeyChange} id="inputOzonApiKey"
+                                               className="form-control form-group input-rounded" placeholder="Ozon API-KEY"
+                                               required/>
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label htmlFor="inputWbUserName" className="sr-only">Password</label>
+                                        <input type="text" onChange={this.handleWbUserNameChange} id="inputWbUserName"
+                                               className="form-control form-group input-rounded" placeholder="Пользователь WB"
+                                               required/>
+                                    </div>
+                                    <div className="form-group input-rounded">
+                                        <label htmlFor="inputWbPassword" className="sr-only">Password</label>
+                                        <input type="text" onChange={this.handleWbPasswordChange} id="inputWbPassword"
+                                               className="form-control form-group input-rounded" placeholder="Пароль WB"
+                                               required/>
                                     </div>
                                     <button className="btn btn-primary btn-block" onClick={this.signUp} type="button">Зарегистрироваться</button>
                                     <p></p>

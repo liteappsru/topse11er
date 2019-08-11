@@ -3,16 +3,20 @@ var assert = require('assert');
 var url = 'mongodb://localhost:27017/topse11er';
 
 module.exports = {
-	signup: function(name, email, password){
-		MongoClient.connect(url, function(err, client) {              
+	signup: function(name,email,password,ozonClientId,ozonApiKey,wbUserName,wbPassword){
+		MongoClient.connect(url, function(err, client) {
 		  	const db = client.db('topse11er');
             db.collection('user').insertOne( {
-				"name": name,
-				"email": email,
-				"password": password
+				name: name,
+				email: email,
+				password: password,
+				ozonClientId: ozonClientId,
+				ozonApiKey: ozonApiKey,
+				wbUserName: wbUserName,
+				wbPassword: wbPassword
 			},function(err, result){
 				assert.equal(err, null);
-		    	//console.log("Сохранение данных регистрации пользователя");
+		    	console.log("Сохранение данных регистрации пользователя");
 			});
 		});
 	},
