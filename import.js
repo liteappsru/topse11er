@@ -2,6 +2,7 @@ let request = require('request');
 let MongoClient = require('mongodb').MongoClient;
 let appConfig = require('./config');
 let aggregator = require('./aggregator');
+let connector = require('./connector');
 
 module.exports = {collect:
         function (parameters) {
@@ -68,20 +69,34 @@ function ozonOrderCallback(error, response, body) {
 }
 
 function wbCollect() {
-    const wbAuthBody = {
-        'UserName':appConfig.wb.wbUserName,
-        'Password':appConfig.wb.wbPassword
-    };
 
-    const wbAuthOptions = {
-        url: appConfig.wb.uriAuth,
-        method: appConfig.wb.method,
-        body: wbAuthBody,
-        json: true,
-        headers: appConfig.wb.headerAuth,
-        followRedirect: true
-    };
-    request(wbAuthOptions, wbAuthCallback);
+    MongoClient.connect(appConfig.url, function (err, client) {
+        if (err) {
+            console.log(err);
+        }
+        const db = client.db('topse11er');
+        db.collection('user').findOne({},function(err, result){
+            if(result==null){
+                //callback(false)
+            }
+            else{
+                const wbAuthBody = {
+                    'UserName':result.wbUserName,//appConfig.wb.wbUserName,
+                    'Password':result.wbPassword//appConfig.wb.wbPassword
+                };
+
+                const wbAuthOptions = {
+                    url: appConfig.wb.uriAuth,
+                    method: appConfig.wb.method,
+                    body: wbAuthBody,
+                    json: true,
+                    headers: appConfig.wb.headerAuth,
+                    followRedirect: true
+                };
+                request(wbAuthOptions, wbAuthCallback);
+            }
+        });
+    })
 }
 
 function wbAuthCallback(error, response) {
@@ -228,4 +243,4 @@ function collect(){
     //aggregate();
 }
 
-//collect();
+collect();

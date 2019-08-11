@@ -2,17 +2,11 @@ let MongoClient = require('mongodb').MongoClient;
 let assert = require('assert');
 let dateFormat = require('dateformat');
 let appConfig = require('./config');
+let connector = require('./connector');
 
 module.exports = {aggregate:
     function aggregate(parameters) {
-        MongoClient.connect(appConfig.url, function (err, client){
-            if (err){
-                console.log(err);
-            }
-            else {
-                onConnect(client, parameters);
-            }
-        })
+        connector.connect(onConnect, parameters);
     }
 };
 
