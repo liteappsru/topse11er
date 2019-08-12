@@ -21,10 +21,10 @@ app.post('/signin', function (req, res) {
   user.validateSignIn(user_name,password,function(result){
     if(result){      
       sessions.username = user_name;
-      res.send(user_name + 'Success')
+      res.send('Success')
     }
     else{
-      res.send(user_name + ' не верный логин или пароль')
+      res.send('Не верный логин или пароль')
     }
   });
 });
