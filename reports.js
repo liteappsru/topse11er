@@ -8,7 +8,7 @@ function getData(callback,params){
     MongoClient.connect(appConfig.url, function(err, client) {
         const db = client.db(appConfig.dbName);
         db.collection(params.collection).find({tsUser:tsUser}, function(err,cursor){
-            cursor.toArray(function(err, docs){
+            cursor.sort({"dim":1}).limit(10).toArray(function(err, docs){
                 assert.equal(null, err);
                 for(let i = 0; i<docs.length;i++){
                     let el = docs[i];
@@ -17,7 +17,7 @@ function getData(callback,params){
                 }
                 callback(docs);
                 client.close();
-            });
+            })
         });
     });
 }
@@ -26,34 +26,60 @@ function getOrders(callback, params){
     MongoClient.connect(appConfig.url, function(err, client) {
         const db = client.db(appConfig.dbName);
         let options = [
+            {$match:{'tsUser':tsUser}},
             {'$group': {_id: {'date': '$date', 'shop':'$shop','product_id':'$product_id','product_name':'$product_name'},
-                    'sales': {'$sum': '$sales'},
-                    'cost': {'$sum': '$cost'},
-                    'delivery': {'$sum': '$delivery'},
-                    'quantity': {'$sum': '$quantity'}
-                }}
+                'sales': {'$sum': '$sales'},
+                'cost': {'$sum': '$cost'},
+                'delivery': {'$sum': '$delivery'},
+                'quantity': {'$sum': '$quantity'}
+            }},
+            {'$sort':{'date': -1}}
         ];
         db.collection(params.collection)
-            .aggregate(options, function(err,cursor){
-                cursor.sort({"_id.date":1}).toArray(function(err, docs){
-                    assert.equal(null, err);
-                    for(let i = 0; i<docs.length;i++){
-                        let item = docs[i];
-                        let ts_hms = Date.parse(item._id.date);
-                        item.date = dateFormat(ts_hms, "yyyy-mm-dd");
-                        item.shop = item._id.shop;
-                        item.product_id   = item._id.product_id;
-                        item.product_name = item._id.product_name;
-                    }
-                    //console.log(docs);
-                    callback(docs);
-                    client.close();
-                })
-            });
-            // .then()
-            // .error(function (e){
-            //     console.log(e);
-            // })
+        .aggregate(options, function(err,cursor){
+            cursor.toArray(function(err, docs){
+                assert.equal(null, err);
+                for(let i = 0; i<docs.length;i++){
+                    let item = docs[i];
+                    let ts_hms = Date.parse(item._id.date);
+                    item.date = dateFormat(ts_hms, "yyyy-mm-dd");
+                    item.shop = item._id.shop;
+                    item.product_id   = item._id.product_id;
+                    item.product_name = item._id.product_name;
+                }
+                //console.log(docs);
+                callback(docs);
+                client.close();
+            })
+        });
+    });
+}
+
+function getCommmonData(callback, params){
+    MongoClient.connect(appConfig.url, function(err, client) {
+        const db = client.db(appConfig.dbName);
+        let options = [
+            {$match:{'tsUser':tsUser}},
+            {'$group': {_id: {'date': '$date'},
+                'sales': {'$sum': '$sales'},
+                'profit': {'$sum': '$profit'}
+            }}
+        ];
+        db.collection(params.collection)
+        .aggregate(options, function(err,cursor){
+            cursor.sort({"_id.date":-1}).toArray(function(err, docs){
+                assert.equal(null, err);
+                let result = {};
+                for(let i = 0; i<docs.length;i++){
+                    let item = docs[i];
+                    result.commonSales = item.sales;
+                    result.commonProfit = item.profit;
+                    break;
+                }
+                callback(result);
+                client.close();
+            })
+        });
     });
 }
 
@@ -112,6 +138,17 @@ module.exports = {
             }
         };
         getOrders(callback,params);
+    },
+    commonData: function(_tsUser, callback){
+        tsUser = _tsUser;
+        params = {
+            collection:'sales',
+            maping:{
+                x:'dim',
+                y:'margin'
+            }
+        };
+        getCommmonData(callback,params);
     }
 
 }

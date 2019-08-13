@@ -37,7 +37,7 @@
           <div class="info-wrapper d-md-block d-sm-none">
             <span class="tslogo">TopSe<span class="tslogoGreen">1<span class="tslogoInv">1</span></span>er</span>
           </div>
-          <div class="info-wrapper">
+          <div class="info-wrapper" >
             <p class="user-name">admin</p>
           </div>
           <div class="info-wrapper">
@@ -60,7 +60,7 @@
               <div class="col-md-12 equel-grid">
                 <div class="grid">
                   <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Выручка по дням</p>
+                    <p class="card-title ml-n1" id="salesCommon">Выручка по дням</p>
                     <div class="chartdiv1" style="height: 500px;">
                     </div>
                   </div>
@@ -72,7 +72,7 @@
               <div class="col-md-12 equel-grid">
                 <div class="grid">
                   <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Прибыль по дням</p>
+                    <p class="card-title ml-n1" id="profitCommon">Прибыль по дням</p>
                     <div class="chartdiv2" style="height: 500px;">
                     </div>
                   </div>
@@ -174,7 +174,7 @@
     <script src="assets/js/template.js"></script>
 
 <!--    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>-->
-<!--    <script type="text/babel" src="salesDetails.jsx"></script>-->
+<!--    <script type="text/babel" src="reports.jsx"></script>-->
     <!-- Chart code -->
     <script>
       function tuneXYChart(chart){
@@ -182,18 +182,28 @@
 
         chart.data = [{}];
 
-        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        var  valueAxis = chart.xAxes.push(new am4charts.ValueAxis());
+
+        var categoryAxis = chart.yAxes.push(new am4charts.CategoryAxis());
         categoryAxis.renderer.grid.template.location = 0;
         categoryAxis.dataFields.category = "x";
-        categoryAxis.renderer.minGridDistance = 20;
+        categoryAxis.renderer.minGridDistance = 10;
         categoryAxis.fontSize = 11;
         categoryAxis.renderer.labels.template.rotation = 270;
+        categoryAxis.renderer.inside = true;
+
+        let labelTemplate = categoryAxis.renderer.labels.template;
+        labelTemplate.rotation = 0;
+        labelTemplate.horizontalCenter = "left";
+        labelTemplate.verticalCenter = "middle";
+        labelTemplate.dx = 20; // moves it a bit
+        //labelTemplate.inside = false;
 
         var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
         // valueAxis.min = 0;
         // valueAxis.max = 24000;
         valueAxis.strictMinMax = true;
-        valueAxis.renderer.minGridDistance = 20;
+        valueAxis.renderer.minGridDistance = 10;
 // // axis break
 //         var axisBreak = valueAxis.axisBreaks.create();
 //         axisBreak.startValue = 10000;
@@ -209,16 +219,24 @@
 //         axisBreak.defaultState.transitionDuration = 1000;
 
         var series = chart.series.push(new am4charts.ColumnSeries());
-        series.dataFields.categoryX = "x";
+        series.dataFields.categoryY = "x";
         series.dataFields.dateX = "x";
-        series.dataFields.valueY = "y";
+        series.dataFields.valueX = "y";
         series.columns.template.tooltipText = "{valueY.value}";
         series.columns.template.tooltipY = 0;
         series.columns.template.column.cornerRadiusTopLeft = 10;
         series.columns.template.column.cornerRadiusTopRight = 10;
         series.columns.template.column.fillOpacity = 0.8;
         series.columns.template.strokeOpacity = 0;
-        series.tooltip.pointerOrientation = "vertical";
+
+        var maleLabel = series.bullets.push(new am4charts.LabelBullet());
+        maleLabel.label.text = "{valueX}";
+        maleLabel.label.hideOversized = false;
+        maleLabel.label.truncate = false;
+        maleLabel.label.horizontalCenter = "right";
+        maleLabel.label.dx = -10;
+        // series.tooltip.pointerOrientation = "vertical";
+
 
 // as by default columns of the same series are of the same color, we add adapter which takes colors from chart.colors color set
         series.columns.template.adapter.add("fill", function(fill, target) {
@@ -227,7 +245,7 @@
 
         //tunes
         //chart.cursor = new am4charts.XYCursor();
-        chart.scrollbarX = new am4core.Scrollbar();
+        chart.scrollbarY = new am4core.Scrollbar();
       }
 
       function getChartData(chart,dataName){
@@ -245,26 +263,46 @@
               console.log(error);
           });
       }
+
+      function getCommonData(){
+        axios.post('/commonData', {})
+                .then(function (response) {
+                  console.log(response);
+                  if(response){
+                    document.getElementById('salesCommon').innerText = 'Выручка по дням. Сегодня: ' + response.data.commonSales;
+                    document.getElementById('profitCommon').innerText = 'Прибыль по дням. Сегодня: ' + response.data.commonProfit;
+                  }
+                  else{
+                    alert(response.data);
+                  }
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+      }
+
       am4core.ready(function() {
         // Themes begin
         am4core.useTheme(am4themes_animated);
         // Themes end
 
-        var chart = am4core.create("chartdiv1", am4charts.XYChart);
-        tuneXYChart(chart);
-        getChartData(chart,'/salesByDay');
+        var chart1 = am4core.create("chartdiv1", am4charts.XYChart);
+        tuneXYChart(chart1);
+        getChartData(chart1,'/salesByDay');
 
-        var chart = am4core.create("chartdiv2", am4charts.XYChart);
-        tuneXYChart(chart);
-        getChartData(chart,'/profitByDay');
+        var chart2 = am4core.create("chartdiv2", am4charts.XYChart);
+        tuneXYChart(chart2);
+        getChartData(chart2,'/profitByDay');
 
-        var chart = am4core.create("chartdiv3", am4charts.XYChart);
-        tuneXYChart(chart);
-        getChartData(chart,'/marginByDay');
+        var chart3 = am4core.create("chartdiv3", am4charts.XYChart);
+        tuneXYChart(chart3);
+        getChartData(chart3,'/marginByDay');
 
-        var chart = am4core.create("chartdiv4", am4charts.XYChart);
-        tuneXYChart(chart);
-        getChartData(chart,'/marginByGoods');
+        var chart4 = am4core.create("chartdiv4", am4charts.XYChart);
+        tuneXYChart(chart4);
+        getChartData(chart4,'/marginByGoods');
+
+        getCommonData();
 
       }); // end am4core.ready()
     </script>

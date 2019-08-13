@@ -114,6 +114,19 @@ app.post('/orders', function (req, res) {
   }
 });
 
+app.post('/commonData', function (req, res) {
+  if(sessions && sessions.username) {
+    console.log(sessions.username + ' commmonData');
+    reports.commonData(sessions.username, function (result) {
+      if (result) {
+        res.send(result)
+      } else {
+        res.send({});
+      }
+    });
+  }
+});
+
 app.get('/home', function (req, res) {
   if(sessions && sessions.username){
     console.log(sessions.username + ' Авторизация пройдена');
