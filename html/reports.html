@@ -249,7 +249,7 @@
       }
 
       function getChartData(chart,dataName){
-          axios.post(dataName, {})
+          axios.get(dataName)
           .then(function (response) {
               console.log(response);
               if(response){
@@ -265,7 +265,7 @@
       }
 
       function getCommonData(){
-        axios.post('/commonData', {})
+        axios.get('/report/common')
                 .then(function (response) {
                   console.log(response);
                   if(response){
@@ -288,19 +288,19 @@
 
         var chart1 = am4core.create("chartdiv1", am4charts.XYChart);
         tuneXYChart(chart1);
-        getChartData(chart1,'/salesByDay');
+        getChartData(chart1,'/report/sales');
 
         var chart2 = am4core.create("chartdiv2", am4charts.XYChart);
         tuneXYChart(chart2);
-        getChartData(chart2,'/profitByDay');
+        getChartData(chart2,'/report/profit');
 
         var chart3 = am4core.create("chartdiv3", am4charts.XYChart);
         tuneXYChart(chart3);
-        getChartData(chart3,'/marginByDay');
+        getChartData(chart3,'/report/margin');
 
         var chart4 = am4core.create("chartdiv4", am4charts.XYChart);
         tuneXYChart(chart4);
-        getChartData(chart4,'/marginByGoods');
+        getChartData(chart4,'/report/margin');
 
         getCommonData();
 
@@ -309,7 +309,7 @@
 
     <script>
       let innHTML = '';
-      axios.post('/orders', {})
+      axios.get('/report/orders')
         .then(function (response) {
           for (let i=0;i<response.data.length; i++){
             let item = response.data[i];

@@ -23,11 +23,11 @@ module.exports = {
 			});
 		});
 	},
-	validateSignIn: function(username, password,callback){
+	validateSignIn: function(username, password, callback){
 		MongoClient.connect(appConfig.url, function(err, client){
 			//console.log(username,password);
             const db = client.db('topse11er');
-			db.collection('user').findOne( { email : username ,password: password 
+			db.collection('user').findOne( { email : username ,password: password
 			},function(err, result){
 				if(result==null){
 					//console.log('Возврат false')
