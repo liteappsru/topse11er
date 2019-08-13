@@ -8,7 +8,7 @@ function getData(callback,params){
     MongoClient.connect(appConfig.url, function(err, client) {
         const db = client.db(appConfig.dbName);
         db.collection(params.collection).find({tsUser:tsUser}, function(err,cursor){
-            cursor.sort({"dim":1}).limit(10).toArray(function(err, docs){
+            cursor.sort({"dim":-1}).limit(10).toArray(function(err, docs){
                 assert.equal(null, err);
                 for(let i = 0; i<docs.length;i++){
                     let el = docs[i];
