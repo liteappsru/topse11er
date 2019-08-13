@@ -6,10 +6,10 @@ let connector = require('./connector');
 let tsUser;
 
 module.exports = {collect:
-        function (parameters) {
-            collect(parameters);
+        function (_tsUser, wb, oz, type) {
+            collect(_tsUser, wb, oz, type);
         }
-};
+    }
 
 let ozonOptions = {
     uri: appConfig.ozon.uri,
@@ -25,7 +25,7 @@ let ozonOptions = {
     headers: appConfig.ozon.headers
 };
 
-function ozonCollect(){
+function ozonCollect(type){
     MongoClient.connect(appConfig.url, function (err, client) {
         if (err) {
             console.log(err);
@@ -133,7 +133,7 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
     }
 }
 
-function wbCollect() {
+function wbCollect(type) {
     MongoClient.connect(appConfig.url, function (err, client) {
         if (err) {
             console.log(err);
@@ -305,12 +305,16 @@ function  afterAggregate(docs){
     console.log('Вычисления завершены');
 }
 
-function collect(_tsUser){
+function collect(_tsUser, wb, oz, type){
     if (_tsUser){
         console.log(_tsUser);
         tsUser =_tsUser;
-        ozonCollect();
-        //wbCollect();
+        if (oz){
+            ozonCollect(type);
+        }
+        if (wb) {
+            wbCollect(type);
+        }
     }
 }
 
