@@ -35,8 +35,10 @@ module.exports = {
 				}
 				else{
 					//console.log('Возврат true')
+					importjs.collect(username,  false, true, 'last');
 					callback(true)
 				}
+				client.close();
 			});
 		});
 	}
