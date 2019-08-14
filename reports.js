@@ -70,7 +70,7 @@ function getCommmonData(callback, params){
             cursor.sort({"_id.date":-1}).toArray(function(err, docs){
                 assert.equal(null, err);
                 let result = {};
-                for(let i = 0; i<docs.length;i++){
+                for (let i = 0; i<docs.length;i++){
                     let item = docs[i];
                     result.commonSales = item.sales;
                     result.commonProfit = item.profit;
@@ -86,40 +86,40 @@ function getCommmonData(callback, params){
 module.exports = {
     salesByDay: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'salesByDay',
             maping:{
                 x:'dim',
                 y:'sales'
             }
-        }
+        };
         getData(callback,params);
     },
     profitByDay: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'salesByDay',
             maping:{
                 x:'dim',
                 y:'profit'
             }
-        }
+        };
         getData(callback,params);
     },
     marginByDay: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'salesByDay',
             maping:{
                 x:'dim',
                 y:'margin'
             }
-        }
+        };
         getData(callback,params);
     },
     marginByGoods: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'goodsByDay',
             maping:{
                 x:'dim',
@@ -130,7 +130,7 @@ module.exports = {
     },
     orders: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'sales',
             maping:{
                 x:'dim',
@@ -141,7 +141,7 @@ module.exports = {
     },
     commonData: function(_tsUser, callback){
         tsUser = _tsUser;
-        params = {
+        const params = {
             collection:'sales',
             maping:{
                 x:'dim',
@@ -150,5 +150,4 @@ module.exports = {
         };
         getCommmonData(callback,params);
     }
-
-}
+};
