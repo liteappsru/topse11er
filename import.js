@@ -37,6 +37,9 @@ function ozonCollect(type){
                 return;
             }
             else{
+                if (type == 'last'){
+                    ozonOptions.body.since = '2019-08-11T00:00:00.032Z';
+                }
                 ozonOptions.headers["Api-Key"] = result.ozonApiKey;
                 ozonOptions.headers["Client-Id"] = result.ozonClientId;
 
