@@ -1,4 +1,5 @@
 let importjs = require('../import');
+let session = require('../session');
 
 exports.allByUser = function (req, res) {
     let sessions=req.session;
@@ -12,6 +13,7 @@ exports.allByUser = function (req, res) {
 };
 
 exports.all = function (req, res) {
+
     res.send('import All');
 };
 
@@ -20,5 +22,6 @@ exports.today = function (req, res) {
 };
 
 exports.last = function (req, res) {
-    res.send('import today');
+    importjs.collect(session.tsUser);
+    res.send('import last');
 };

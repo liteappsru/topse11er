@@ -4,12 +4,19 @@ let appConfig = require('./config');
 let aggregator = require('./aggregator');
 let connector = require('./connector');
 let tsUser;
+let dateFormat = require('dateformat');
+
+const importTypes = {all: 'all',
+                    user: 'user',
+                    last: 'last',
+                    today: 'today'};
 
 module.exports = {collect:
         function (_tsUser, wb, oz, type) {
             collect(_tsUser, wb, oz, type);
-        }
-    }
+        },
+        importTypes: importTypes
+    };
 
 let ozonOptions = {
     uri: appConfig.ozon.uri,
@@ -31,15 +38,28 @@ function ozonCollect(type){
             console.log(err);
         }
         const db = client.db('topse11er');
-        db.collection('user').findOne({email:tsUser}, function(err, result){
+        let searchString = '';
+        if (type == importTypes.all){
+            searchString = {};
+        }
+        else {
+            searchString = {email:tsUser};
+        }
+        let since = '';
+        if (type == importTypes.last){
+            since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
+        }
+        else {
+            since = '2019-08-11T00:00:00.032Z';
+        }
+        console.log('Загрузка OZ начиная c ' + since + ' пользователь ' + tsUser);
+        db.collection('user').findOne(searchString, function(err, result){
             if(result==null){
                 console.log('Не найдены параметры авторизации');
                 return;
             }
             else{
-                if (type == 'last'){
-                    ozonOptions.body.since = '2019-08-11T00:00:00.032Z';
-                }
+                ozonOptions.body.since = since;
                 ozonOptions.headers["Api-Key"] = result.ozonApiKey;
                 ozonOptions.headers["Client-Id"] = result.ozonClientId;
 
@@ -309,6 +329,11 @@ function  afterAggregate(docs){
 }
 
 function collect(_tsUser, wb, oz, type){
+    console.log('Загрузка началась');
+    console.log('Пользователь' + _tsUser);
+    console.log('OZ' + oz);
+    console.log('WB' + wb);
+    console.log('TYPE' + type);
     if (_tsUser){
         console.log(_tsUser);
         tsUser =_tsUser;

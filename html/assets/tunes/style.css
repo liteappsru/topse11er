@@ -25,3 +25,23 @@
  bottom: 0px;
  justify-content: center;
 }
+
+.bgGreen{
+ background: #98FB98;
+}
+
+.bgBlue{
+ background: #AFEEEE;
+}
+
+.bgRed{
+ background: #F08080;
+}
+
+.bgViolet{
+ background: #D8BFD8;
+}
+
+.bgYellow{
+ background: #EEE8AA;
+}

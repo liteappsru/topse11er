@@ -56,6 +56,65 @@
               </div>
             </div>
 
+            <div class="row" id="commonPanels">
+              <div class="col-md-3 col-sm-6 col-12 equel-grid">
+                <div class="grid bgGreen">
+                  <div class="grid-body text-gray">
+                    <p class="text-black">Сегодня</p>
+                    <div class="d-flex justify-content-between">
+                      <p>Сумма</p>
+                      <p>+Прирост</p>
+                    </div>
+                    <div class="wrapper w-50 mt-4">
+                      <canvas height="45" id="stat-line_1"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-6 col-12 equel-grid">
+                <div class="grid bgBlue">
+                  <div class="grid-body text-gray">
+                    <p class="text-black">Вчера</p>
+                    <div class="d-flex justify-content-between">
+                      <p>Сумма</p>
+                      <p>+Прирост</p>
+                    </div>
+                    <div class="wrapper w-50 mt-4">
+                      <canvas height="45" id="stat-line_2"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-6 col-12 equel-grid">
+                <div class="grid bgViolet">
+                  <div class="grid-body text-gray">
+                    <p class="text-black">Текущий месяц</p>
+                    <div class="d-flex justify-content-between">
+                      <p>Сумма</p>
+                      <p>+Прирост</p>
+                    </div>
+                    <div class="wrapper w-50 mt-4">
+                      <canvas height="45" id="stat-line_3"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3 col-sm-6 col-12 equel-grid">
+                <div class="grid bgYellow">
+                  <div class="grid-body text-gray">
+                    <p class="text-black">Прошлый месяц</p>
+                    <div class="d-flex justify-content-between">
+                      <p>Сумма</p>
+                      <p>- Прирост</p>
+                    </div>
+                    <div class="wrapper w-50 mt-4">
+                      <canvas height="45" id="stat-line_4"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-md-12 equel-grid">
                 <div class="grid">
@@ -174,7 +233,7 @@
     <script src="assets/js/template.js"></script>
 
 <!--    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>-->
-<!--    <script type="text/babel" src="reports.jsx"></script>-->
+<!--    <script type="text/babel" src="components/commonPanels.jsx"></script>-->
     <!-- Chart code -->
     <script>
       function tuneXYChart(chart){

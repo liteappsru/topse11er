@@ -30,12 +30,10 @@ module.exports = {
 			db.collection('user').findOne( { email : username ,password: password
 			},function(err, result){
 				if(result==null){
-					//console.log('Возврат false')
 					callback(false)
 				}
 				else{
-					//console.log('Возврат true')
-					importjs.collect(username,  false, true, 'last');
+					importjs.collect(username,  false, true, importjs.importTypes.last);
 					callback(true)
 				}
 				client.close();

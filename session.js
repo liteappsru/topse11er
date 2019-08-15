@@ -2,6 +2,7 @@ const user = require('./user');
 let validated = false;
 let session;
 let username;
+let tsUser;
 let error = 'Этот текст никогда не должен появляться. Вопросы к модулю session';
 
 module.exports = {
@@ -13,6 +14,7 @@ module.exports = {
         if (session) {
             const user_name=req.body.email;
             const password=req.body.password;
+            const tsUser = user_name;
             console.log('validating ' + session.username);
             user.validateSignIn(user_name,password,function(result){
                 if(result){
