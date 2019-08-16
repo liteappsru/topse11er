@@ -94,6 +94,7 @@ function ozonAuthCallback(error, response, body) {
     let order_ids = body.result.order_ids;
     if (order_ids==undefined){
         console.log('Ozon. получен неправильный список заказов')
+        return;
     }
     if (order_ids.length == 0){
         return;
