@@ -2,7 +2,7 @@ const user = require('./user');
 let validated = false;
 let session;
 let username;
-let tsUser;
+let tsUser = '';
 let error = 'Этот текст никогда не должен появляться. Вопросы к модулю session';
 
 module.exports = {
@@ -32,5 +32,6 @@ module.exports = {
             error = 'Не указан логин';
             return false;
         }
-    }
+    },
+    tsUser:tsUser
 };

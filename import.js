@@ -39,12 +39,12 @@ function ozonCollect(type){
         }
         const db = client.db('topse11er');
         let searchString = '';
-        if (type == importTypes.all){
+        // if (type == importTypes.all){
             searchString = {};
-        }
-        else {
-            searchString = {email:tsUser};
-        }
+        // }
+        // else {
+        //     searchString = {email:tsUser};
+        // }
         let since = '';
         if (type == importTypes.last){
             since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
@@ -53,19 +53,24 @@ function ozonCollect(type){
             since = '2019-08-11T00:00:00.032Z';
         }
         console.log('Загрузка OZ начиная c ' + since + ' пользователь ' + tsUser);
-        db.collection('user').findOne(searchString, function(err, result){
+        //db.collection('user').find(searchString, function(err, result){
+        let cursor =db.collection('user').find(searchString);
+        cursor.toArray(function(err, result){
             if(result==null){
                 console.log('Не найдены параметры авторизации');
                 return;
             }
             else{
-                ozonOptions.body.since = since;
-                ozonOptions.headers["Api-Key"] = result.ozonApiKey;
-                ozonOptions.headers["Client-Id"] = result.ozonClientId;
+                for (i=0; i<result.length; i++){
+                    console.log(result[i]);
+                    ozonOptions.body.since = since;
+                    ozonOptions.headers["Api-Key"] = result[i].ozonApiKey;
+                    ozonOptions.headers["Client-Id"] = result[i].ozonClientId;
 
-                request(ozonOptions, function(error, response, body){
-                    ozonAuthCallback(error, response, body);
-                });
+                    request(ozonOptions, function(error, response, body){
+                        ozonAuthCallback(error, response, body);
+                    });
+                }
                 client.close();
             }
         });
@@ -90,6 +95,9 @@ function ozonAuthCallback(error, response, body) {
     if (order_ids==undefined){
         console.log('Ozon. получен неправильный список заказов')
     }
+    if (order_ids.length == 0){
+        return;
+    }
     let orderid = order_ids[0];
     ozonOptions.method = "GET";
     ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
@@ -101,7 +109,7 @@ function ozonAuthCallback(error, response, body) {
 
 function ozonOrderCallback(error, response, body, order_ids, order_i) {
     if (body.error){
-        console.log(body.error);
+        console.log('OZ order callback ' +body.error);
         return;
     }
     if (order_ids==undefined){
@@ -325,20 +333,22 @@ function aggregate(){
 }
 
 function  afterAggregate(docs){
-    console.log('Вычисления завершены');
+    //console.log('Вычисления завершены');
+    console.log('Загрузка завершилась');
 }
 
 function collect(_tsUser, wb, oz, type){
     console.log('Загрузка началась');
-    console.log('Пользователь' + _tsUser);
-    console.log('OZ' + oz);
-    console.log('WB' + wb);
-    console.log('TYPE' + type);
+    console.log('Пользователь: ' + _tsUser);
+    console.log('OZ: ' + oz);
+    console.log('WB: ' + wb);
+    console.log('TYPE: ' + type);
     if (_tsUser){
         console.log(_tsUser);
         tsUser =_tsUser;
         if (oz){
-            ozonCollect(type);
+            //ozonCollect(type);
+            ozonCollect(importTypes.all);
         }
         if (wb) {
             wbCollect(type);
@@ -346,6 +356,6 @@ function collect(_tsUser, wb, oz, type){
     }
 }
 
-aggregate()
+aggregate();
 
 //collect();

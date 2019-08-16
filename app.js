@@ -72,9 +72,9 @@ app.get('/home', function (req, res) {
 });
 
 app.get('/import', function (req, res) {
-  if(sessions && sessions.username){
-    console.log(sessions.username + ' import');
-    res.send(importjs.collect(sessions.username));
+  if(session.validated){
+    console.log(session.tsUser + ' import');
+    res.send(importjs.collect(session.tsUser));
   }
   else{
     res.send('Не верный логин или пароль')
