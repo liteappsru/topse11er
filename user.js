@@ -44,7 +44,8 @@ module.exports = {
 		MongoClient.connect(appConfig.url, function(err, client){
 			//console.log(username,password);
 			const db = client.db('topse11er');
-			db.collection('user').findOne({},function(err, result){
+			let cursor = db.collection('user').find({});
+			cursor.toArray(function(err, result){
 				if(result==null){
 					callback(false)
 				}
