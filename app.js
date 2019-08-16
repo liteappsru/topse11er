@@ -81,6 +81,20 @@ app.get('/import', function (req, res) {
   }
 });
 
+app.get('/users', function (req, res) {
+  if(session.validated){
+    console.log(session.tsUser + ' import');
+    user.getAll(function(result){
+      if (result){
+        res.send(result);
+      }
+    });
+  }
+  else{
+    res.send('Не верный логин или пароль')
+  }
+});
+
 app.listen(7777,function(){
     console.log("Started listening on port", 7777);
 });
