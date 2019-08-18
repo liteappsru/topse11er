@@ -23,37 +23,21 @@ module.exports = {
 			});
 		});
 	},
-	validateSignIn: function(username, password, callback){
-		MongoClient.connect(appConfig.url, function(err, client){
-			//console.log(username,password);
-            const db = client.db('topse11er');
-			db.collection('user').findOne( { email : username ,password: password
-			},function(err, result){
-				if(result==null){
-					callback(false)
-				}
-				else{
-					importjs.collect(username,  false, true, importjs.importTypes.last);
-					callback(true)
-				}
-				client.close();
-			});
-		});
+	validateSignIn: async function(username, password, callback){
+        const connector = await require('./connector').connect();
+        connector.db.collection('user').findOne( { email : username ,password: password
+            },function(err, result){
+                if(result==null){
+                    callback(false)
+                }
+                else{
+                    callback(true)
+                }
+                connector.client.close();
+            });
 	},
-	getAll:function(callback){
-		MongoClient.connect(appConfig.url, function(err, client){
-			//console.log(username,password);
-			const db = client.db('topse11er');
-			let cursor = db.collection('user').find({});
-			cursor.toArray(function(err, result){
-				if(result==null){
-					callback(false)
-				}
-				else{
-					callback(result)
-				}
-				client.close();
-			});
-		});
+	getAll: async function(connection){
+        let result = await connection.db.collection('user').find({}).toArray();
+        return result;
 	}
 };

@@ -2,14 +2,17 @@ let MongoClient = require('mongodb').MongoClient;
 let assert = require('assert');
 let appConfig = require('./config');
 
-module.exports = {connect:
-    function connect(callback, parameters) {
-        MongoClient.connect(appConfig.url, function (err, client) {
-            if (err) {
-                console.log(err);
-            } else {
-                callback(client, parameters);
-            }
-        })
+async function getMongoClient () {
+    let client;
+    let db;
+    client = await MongoClient.connect(appConfig.url);
+    db = client.db(appConfig.dbName);
+    return {client:client,
+        db:db}
+}
+
+module.exports = {
+    connect: function () {
+        return getMongoClient();
     }
 };

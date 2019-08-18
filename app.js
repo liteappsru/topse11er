@@ -34,7 +34,7 @@ app.post('/signin', function (req, res) {
       res.send('Не верный логин или пароль')
     }
   });
-  if (session.validate){
+  if (session.validated){
   }
   else {
    //res.send(session.e)

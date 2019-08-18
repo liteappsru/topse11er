@@ -3,37 +3,36 @@ let assert = require('assert');
 let dateFormat = require('dateformat');
 let appConfig = require('./config');
 let connector = require('./connector');
+let connection;
 
 module.exports = {aggregate:
-    function aggregate(parameters) {
-        connector.connect(onConnect, parameters);
+    function aggregate(_connection, parameters) {
+        connection = _connection;
+        onConnect(connection.db, parameters)
     }
 };
 
-function onConnect(client, parameters){
-    const db = client.db(appConfig.dbName);
-    let cursor = db.collection(parameters.collectionName).aggregate(parameters.options);
-    cursor.toArray(function (err, docs) {
-        assert.equal(null, err);
-        if (parameters.putinto == 'goodsByDay'){
-            saveGoodsByDay(client, docs, parameters);
-        }
-        else {
-            saveDataByDay(client, docs, parameters);
-        }
-        if (parameters.callback){
-            parameters.callback(docs);
-        }
-    });
+async function onConnect(db, parameters){
+    let docs = await db.collection(parameters.collectionName).aggregate(parameters.options).toArray();
+    if (parameters.putinto == 'goodsByDay'){
+        saveGoodsByDay(docs, parameters);
+    }
+    else {
+        saveDataByDay(docs, parameters);
+    }
+    if (parameters.callback){
+        parameters.callback(docs);
+    }
 }
 
-function saveDataByDay(client, docs, parameters){
+async function saveDataByDay(docs, parameters){
+
+    console.log('Данные по дням');
     if (!docs){
         console.log('Нет данных для сохранения');
         return;
     }
 
-    const db = client.db(appConfig.dbName);
     for (let i = 0; i < docs.length; i++) {
         try {
             let item = docs[i];
@@ -49,7 +48,7 @@ function saveDataByDay(client, docs, parameters){
             else {
                 margin = ((sales-costs)/costs*100).toPrecision(6);
             }
-            db.collection(parameters.putinto).updateOne(
+            await connection.db.collection(parameters.putinto).updateOne(
                 {dim: date},
                 {
                     $set: {
@@ -68,16 +67,15 @@ function saveDataByDay(client, docs, parameters){
             console.log(e);
         }
     }
-    client.close();
 }
 
-function saveGoodsByDay(client, docs, parameters){
+async function saveGoodsByDay(docs, parameters){
+    console.log('Продажи по дням');
     if (!docs){
         console.log('Нет данных для сохранения');
         return;
     }
 
-    const db = client.db(appConfig.dbName);
     for (let i = 0; i < docs.length; i++) {
         try {
             let item = docs[i];
@@ -91,7 +89,7 @@ function saveGoodsByDay(client, docs, parameters){
             else {
                 margin = ((sales-costs)/costs*100).toPrecision(6);
             }
-            db.collection(parameters.putinto).updateOne(
+            await connection.db.collection(parameters.putinto).updateOne(
                 {dim: item._id.product_id},
                 {
                     $set: {
@@ -110,5 +108,4 @@ function saveGoodsByDay(client, docs, parameters){
             console.log(e);
         }
     }
-    client.close();
 }

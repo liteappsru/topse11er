@@ -4,7 +4,10 @@ let appConfig = require('./config');
 let aggregator = require('./aggregator');
 let connector = require('./connector');
 let tsUser;
+let userData;
 let dateFormat = require('dateformat');
+let callback;
+let connection;
 
 const importTypes = {all: 'all',
                     user: 'user',
@@ -33,48 +36,30 @@ let ozonOptions = {
 };
 
 function ozonCollect(type){
-    MongoClient.connect(appConfig.url, function (err, client) {
-        if (err) {
-            console.log(err);
-        }
-        const db = client.db('topse11er');
-        let searchString = '';
-        // if (type == importTypes.all){
-            searchString = {};
-        // }
-        // else {
-        //     searchString = {email:tsUser};
-        // }
-        let since = '';
-        if (type == importTypes.last){
-            since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
-        }
-        else {
-            since = '2019-08-11T00:00:00.032Z';
-        }
-        console.log('Загрузка OZ начиная c ' + since + ' пользователь ' + tsUser);
-        //db.collection('user').find(searchString, function(err, result){
-        let cursor =db.collection('user').find(searchString);
-        cursor.toArray(function(err, result){
-            if(result==null){
-                console.log('Не найдены параметры авторизации');
-                return;
-            }
-            else{
-                for (i=0; i<result.length; i++){
-                    console.log(result[i]);
-                    ozonOptions.body.since = since;
-                    ozonOptions.headers["Api-Key"] = result[i].ozonApiKey;
-                    ozonOptions.headers["Client-Id"] = result[i].ozonClientId;
+    let searchString = '';
+    // if (type == importTypes.all){
+    //    searchString = {};
+    // }
+    // else {
+    searchString = {email:tsUser};
+    // }
+    let since = '';
+    if (type == importTypes.last){
+        since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
+    }
+    else {
+        since = '2019-08-18T00:00:00.032Z';
+    }
+    console.log('Загрузка OZ начиная c ' + since + ' пользователь ' + tsUser);
+    //db.collection('user').find(searchString, function(err, result){
 
-                    request(ozonOptions, function(error, response, body){
-                        ozonAuthCallback(error, response, body);
-                    });
-                }
-                client.close();
-            }
-        });
-    })
+    ozonOptions.body.since = since;
+    ozonOptions.headers["Api-Key"] = userData.ozonApiKey;
+    ozonOptions.headers["Client-Id"] = userData.ozonClientId;
+
+    request(ozonOptions, function(error, response, body){
+        ozonAuthCallback(error, response, body);
+    });
 }
 
 function ozonAuthCallback(error, response, body) {
@@ -110,7 +95,7 @@ function ozonAuthCallback(error, response, body) {
 
 function ozonOrderCallback(error, response, body, order_ids, order_i) {
     if (body.error){
-        console.log('OZ order callback ' +body.error);
+        console.log('OZ order callback ' + body.error);
         return;
     }
     if (order_ids==undefined){
@@ -285,7 +270,10 @@ function wbOrderCallback(error, response, body) {
     }
 }
 
-function aggregate(){
+async function aggregate(){
+    if (!connection) {
+        connection = await connector.connect();
+    }
     let options = [
         {'$group': {_id: {'date': '$date', 'shop':'$shop', 'tsUser':'$tsUser'},
                     //shop:'$shop',
@@ -300,7 +288,7 @@ function aggregate(){
         putinto:'salesByDay',
         callback:afterAggregate
     };
-    aggregator.aggregate(parameters);
+    aggregator.aggregate(connection, parameters);
 
     options = [
         {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
@@ -315,7 +303,7 @@ function aggregate(){
         putinto:'goodsByDay',
         callback:afterAggregate
     };
-    aggregator.aggregate(parameters);
+    aggregator.aggregate(connection, parameters);
 
     options = [
         {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
@@ -330,23 +318,29 @@ function aggregate(){
         putinto:'totals',
         callback:afterAggregate
     };
-    aggregator.aggregate(parameters);
+    aggregator.aggregate(connection, parameters);
 }
 
 function  afterAggregate(docs){
     //console.log('Вычисления завершены');
+    if (callback){
+        callback();
+    }
     console.log('Загрузка завершилась');
 }
 
-function collect(_tsUser, wb, oz, type){
+function collect(_connection, _userData, wb, oz, type, _callback){
+    userData = _userData;
+    tsUser   = _userData.email;
+    callback = _callback;
+    connection = _connection;
     console.log('Загрузка началась');
-    console.log('Пользователь: ' + _tsUser);
+    console.log('Пользователь: ' + tsUser);
     console.log('OZ: ' + oz);
     console.log('WB: ' + wb);
     console.log('TYPE: ' + type);
-    if (_tsUser){
-        console.log(_tsUser);
-        tsUser =_tsUser;
+    if (tsUser){
+        console.log(tsUser);
         if (oz){
             //ozonCollect(type);
             ozonCollect(importTypes.all);
@@ -357,6 +351,6 @@ function collect(_tsUser, wb, oz, type){
     }
 }
 
-aggregate();
+//aggregate();
 
 //collect();

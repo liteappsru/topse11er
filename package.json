@@ -9,18 +9,22 @@
   "author": "roy",
   "license": "MIT",
   "dependencies": {
+    "async": "^3.1.0",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.4",
     "dateformat": "^3.0.3",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "react-base-table": "^1.6.5",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "sync-request": "^6.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-plugin-transform-react-jsx": "^6.23.0",
     "babel-preset-env": "^1.2.2",
-    "mongodb": "^3.2.7"
+    "mongodb": "^3.2.7",
+    "promise": "^8.0.3",
+    "request-promise": "^4.2.4"
   }
 }
