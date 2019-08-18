@@ -93,7 +93,7 @@ function ozonAuthCallback(error, response, body) {
     });
 }
 
-function ozonOrderCallback(error, response, body, order_ids, order_i) {
+async function ozonOrderCallback(error, response, body, order_ids, order_i) {
     if (body.error){
         console.log('OZ order callback ' + body.error);
         return;
@@ -119,6 +119,10 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
     else{
         aggregate();
     }
+    await updateOzOrder(body);
+}
+
+async function updateOzOrder(body){
     for (let i = 0; i<body.result.items.length; i++) {
         let item = body.result.items[i];
         let order_time = new Date(body.result.order_time);
@@ -127,11 +131,9 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
         order_time.setSeconds(0);
         order_time.setMilliseconds(0);
         let price = Number.parseInt(item.price);
-        MongoClient.connect(appConfig.url, function(err, client) {
-            let db = client.db('topse11er');
-            db.collection('sales').updateOne(
-                {"item_id": item.item_id},
-                {$set:{
+        connection.db.collection('sales').updateOne(
+            {"item_id": item.item_id},
+            {$set:{
                     tsUser:tsUser,
                     shop: 'ozon',
                     date: order_time,
@@ -139,14 +141,12 @@ function ozonOrderCallback(error, response, body, order_ids, order_i) {
                     product_id: item.product_id,
                     product_name:'',
                     quantity: item.quantity,
-                    sales: Number.parseFloat(item.price),
+                    sales: Number.parseFloat(price),
                     cost: Number.parseFloat(0),
                     delivery: Number.parseFloat(0)}
-                },
-                {'upsert': true}
-            );
-            client.close();
-        });
+            },
+            {'upsert': true}
+        );
     }
 }
 
@@ -283,42 +283,45 @@ async function aggregate(){
         }}
     ];
     let parameters = {
-        collectionName:'sales',
-        options:options,
         putinto:'salesByDay',
-        callback:afterAggregate
-    };
-    aggregator.aggregate(connection, parameters);
-
-    options = [
-        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                'sales': {'$sum': '$sales'},
-                'costs': {'$sum': '$cost'},
-                'delivery': {'$sum': '$delivery'}
-            }}
-    ];
-    parameters = {
         collectionName:'sales',
         options:options,
-        putinto:'goodsByDay',
         callback:afterAggregate
     };
-    aggregator.aggregate(connection, parameters);
-
-    options = [
-        {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                'sales': {'$sum': '$sales'},
-                'costs': {'$sum': '$cost'},
-                'delivery': {'$sum': '$delivery'}
-            }}
-    ];
-    parameters = {
-        collectionName:'sales',
-        options:options,
-        putinto:'totals',
-        callback:afterAggregate
-    };
-    aggregator.aggregate(connection, parameters);
+    aggregator.aggregate(connection, parameters)
+    .then(()=>{
+        options = [
+            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                    'sales': {'$sum': '$sales'},
+                    'costs': {'$sum': '$cost'},
+                    'delivery': {'$sum': '$delivery'}
+                }}
+        ];
+        parameters = {
+            putinto:'goodsByDay',
+            collectionName:'sales',
+            options:options,
+            callback:afterAggregate
+        };
+        return aggregator.aggregate(connection, parameters);
+    }).then(()=>{
+        options = [
+            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                    'sales': {'$sum': '$sales'},
+                    'costs': {'$sum': '$cost'},
+                    'delivery': {'$sum': '$delivery'}
+                }}
+        ];
+        parameters = {
+            putinto:'totals',
+            collectionName:'sales',
+            options:options,
+            callback:afterAggregate
+        };
+        return aggregator.aggregate(connection, parameters);
+    }).then(()=>{
+        afterAggregate(undefined);
+    });
 }
 
 function  afterAggregate(docs){

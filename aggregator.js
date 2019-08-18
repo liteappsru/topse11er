@@ -6,28 +6,21 @@ let connector = require('./connector');
 let connection;
 
 module.exports = {aggregate:
-    function aggregate(_connection, parameters) {
+    async function aggregate(_connection, parameters) {
         connection = _connection;
-        onConnect(connection.db, parameters)
+        let docs = await connection.db.collection(parameters.collectionName).aggregate(parameters.options).toArray();
+        console.log(parameters.putinto);
+        if (parameters.putinto == 'goodsByDay'){
+            saveGoodsByDay(docs, parameters);
+        }
+        else {
+            saveDataByDay(docs, parameters);
+        }
     }
 };
 
-async function onConnect(db, parameters){
-    let docs = await db.collection(parameters.collectionName).aggregate(parameters.options).toArray();
-    if (parameters.putinto == 'goodsByDay'){
-        saveGoodsByDay(docs, parameters);
-    }
-    else {
-        saveDataByDay(docs, parameters);
-    }
-    if (parameters.callback){
-        parameters.callback(docs);
-    }
-}
-
 async function saveDataByDay(docs, parameters){
 
-    console.log('Данные по дням');
     if (!docs){
         console.log('Нет данных для сохранения');
         return;
@@ -70,7 +63,6 @@ async function saveDataByDay(docs, parameters){
 }
 
 async function saveGoodsByDay(docs, parameters){
-    console.log('Продажи по дням');
     if (!docs){
         console.log('Нет данных для сохранения');
         return;
