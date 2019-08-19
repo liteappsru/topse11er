@@ -22,8 +22,11 @@ module.exports = {collect:
             collect(_connection, _userData, i, wb, oz, type, _callback);
         },
         importTypes: importTypes,
-        doCollect:function (req,res){
-            doCollect(req,res).then(res.send('done'));
+        collectLast:function (req,res){
+            collectLast(req,res);
+        },
+        collectAll:function (req,res){
+            collectAll(req,res);
         }
     };
 
@@ -39,7 +42,7 @@ function getOzOptions(method, uri, type = undefined){
             since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
         }
         else {
-            since = '2019-08-18T00:00:00.032Z';
+            since = '2019-07-01T00:00:00.032Z';
         }
     }
     if (since){
@@ -377,21 +380,30 @@ function collect(_connection, _allUsers, _userIterator, wb, oz, type, _callback)
     }
 }
 
-async function doCollect(req, res) {
+async function collectLast(req, res) {
 
     connection = await connector.connect();
     let allUsers = await users.getAll(connection);
 
-    collectNext(allUsers,0);
+    collectNext(allUsers,0, importTypes.last);
 
 };
 
-function collectNext(allUsers, i){
+async function collectAll(req, res) {
+
+    connection = await connector.connect();
+    let allUsers = await users.getAll(connection);
+
+    collectNext(allUsers,0, importTypes.last);
+
+};
+
+function collectNext(allUsers, i, importType){
     if (i==allUsers.length){
         closeConnection();
         return;
     }
-    collect(connection, allUsers, i, false, true, importTypes.last, collectNext);
+    collect(connection, allUsers, i, false, true, importType, collectNext);
 }
 
 function closeConnection(){

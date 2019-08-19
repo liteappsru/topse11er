@@ -13,7 +13,8 @@ exports.allByUser = function (req, res) {
     }
 };
 
-exports.all = function (req, res) {
+exports.all = async function (req, res) {
+    await imports.collectAll(req,res);
     res.send('import All');
 };
 
@@ -22,5 +23,6 @@ exports.today = function (req, res) {
 };
 
 exports.last = async function (req, res) {
-    await imports.doCollect(req,res);
+    await imports.collectLast(req,res);
+    res.send('import last');
 };
