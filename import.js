@@ -27,7 +27,10 @@ module.exports = {collect:
         },
         collectAll:function (req,res){
             collectAll(req,res);
-        }
+        },
+        aggregate:function (req,res){
+            aggregate().then(()=>{res.send('done')});
+    }
     };
 
 function getOzOptions(method, uri, type = undefined){

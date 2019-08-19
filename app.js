@@ -81,6 +81,10 @@ app.get('/import', function (req, res) {
   }
 });
 
+app.get('/aggregate', async function (req, res) {
+  importjs.aggregate(req,res);
+});
+
 app.get('/users', async function (req, res) {
   if(session.validated){
     console.log(session.tsUser + ' import');
