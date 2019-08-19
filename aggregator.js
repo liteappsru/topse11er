@@ -25,6 +25,7 @@ async function saveDataByDay(docs, parameters){
         console.log('Нет данных для сохранения');
         return;
     }
+    let closeConnection = false;
 
     for (let i = 0; i < docs.length; i++) {
         try {
@@ -40,6 +41,11 @@ async function saveDataByDay(docs, parameters){
             }
             else {
                 margin = ((sales-costs)/costs*100).toPrecision(6);
+            }
+            if (connection.client.closed)
+            {
+                connection = await connector.connect();
+                closeConnection = true;
             }
             await connection.db.collection(parameters.putinto).updateOne(
                 {dim: date},
@@ -60,6 +66,9 @@ async function saveDataByDay(docs, parameters){
             console.log(e);
         }
     }
+    if (closeConnection){
+        connection.client.close();
+    }
 }
 
 async function saveGoodsByDay(docs, parameters){
@@ -67,6 +76,8 @@ async function saveGoodsByDay(docs, parameters){
         console.log('Нет данных для сохранения');
         return;
     }
+
+    let closeConnection = false;
 
     for (let i = 0; i < docs.length; i++) {
         try {
@@ -80,6 +91,11 @@ async function saveGoodsByDay(docs, parameters){
             }
             else {
                 margin = ((sales-costs)/costs*100).toPrecision(6);
+            }
+            if (connection.client.closed)
+            {
+                connection = await connector.connect();
+                closeConnection = true;
             }
             await connection.db.collection(parameters.putinto).updateOne(
                 {dim: item._id.product_id},
@@ -99,5 +115,8 @@ async function saveGoodsByDay(docs, parameters){
         } catch (e) {
             console.log(e);
         }
+    }
+    if (closeConnection){
+        connection.client.close();
     }
 }

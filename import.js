@@ -1,11 +1,13 @@
-let request = require('request');
-let MongoClient = require('mongodb').MongoClient;
-let appConfig = require('./config');
+const request = require('request-promise');
+const MongoClient = require('mongodb').MongoClient;
+const appConfig = require('./config');
 let aggregator = require('./aggregator');
-let connector = require('./connector');
+const connector = require('./connector');
 let tsUser;
 let userData;
-let dateFormat = require('dateformat');
+let allUsers;
+let userIterator;
+const dateFormat = require('dateformat');
 let callback;
 let connection;
 
@@ -15,54 +17,60 @@ const importTypes = {all: 'all',
                     today: 'today'};
 
 module.exports = {collect:
-        function (_tsUser, wb, oz, type) {
-            collect(_tsUser, wb, oz, type);
+        function (_connection, _userData, i, wb, oz, type, _callback) {
+            collect(_connection, _userData, i, wb, oz, type, _callback);
         },
         importTypes: importTypes
     };
 
-let ozonOptions = {
-    uri: appConfig.ozon.uri,
-    method: appConfig.ozon.method,
-    body: {
-        since:appConfig.ozon.since,
-        to:appConfig.ozon.to,
-        delivery_schema:'fbo',
-        page:1,
-        page_size:1000
-    },
-    json: true,
-    headers: appConfig.ozon.headers
-};
+function getOzOptions(method, uri, type = undefined){
+    let ozonOptions = appConfig.ozOptions;
+    let to = '2020-08-18T00:00:00.032Z';
 
-function ozonCollect(type){
-    let searchString = '';
-    // if (type == importTypes.all){
-    //    searchString = {};
-    // }
-    // else {
-    searchString = {email:tsUser};
-    // }
+    ozonOptions.method = method;
+    ozonOptions.uri = uri;
     let since = '';
-    if (type == importTypes.last){
-        since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
+    if(type) {
+        if (type == importTypes.last){
+            since = dateFormat(Date.now(),"yyyy-mm-dd") + "T00:00:00.032Z";
+        }
+        else {
+            since = '2019-08-18T00:00:00.032Z';
+        }
     }
-    else {
-        since = '2019-08-18T00:00:00.032Z';
+    if (since){
+        ozonOptions.body.since = since;
+        ozonOptions.body.to = to;
     }
-    console.log('Загрузка OZ начиная c ' + since + ' пользователь ' + tsUser);
-    //db.collection('user').find(searchString, function(err, result){
-
-    ozonOptions.body.since = since;
+    ozonOptions.headers = appConfig.ozon.headers;
     ozonOptions.headers["Api-Key"] = userData.ozonApiKey;
     ozonOptions.headers["Client-Id"] = userData.ozonClientId;
-
-    request(ozonOptions, function(error, response, body){
-        ozonAuthCallback(error, response, body);
-    });
+    return ozonOptions;
 }
 
-function ozonAuthCallback(error, response, body) {
+function ozonCollect(type){
+    let promise = new Promise((resolve, reject) =>{
+        let searchString = '';
+        // if (type == importTypes.all){
+        //    searchString = {};
+        // }
+        // else {
+        searchString = {email:tsUser};
+        // }
+
+        let ozonOptions = getOzOptions('POST', appConfig.ozon.uri, type);
+        //db.collection('user').find(searchString, function(err, result){
+
+        request(ozonOptions, function(error, response, body){
+            ozonAuthCallback(error, response, body).then(()=>{
+                console.log('test4 ozonCollect');
+            });
+        });
+    });
+    return promise;
+}
+
+async function ozonAuthCallback(error, response, body) {
     if (body.error){
         console.log(body.error);
         return;
@@ -84,42 +92,44 @@ function ozonAuthCallback(error, response, body) {
     if (order_ids.length == 0){
         return;
     }
-    let orderid = order_ids[0];
-    ozonOptions.method = "GET";
-    ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
-    ozonOptions.body = "";
-    request(ozonOptions, function(error, result, body) {
-        ozonOrderCallback(error, response, body, order_ids, 0);
-    });
+    downloadOrderData(order_ids, 0)
+        .then(()=>{
+            console.log('test3 ozonAuthCallback');
+        });
 }
 
-async function ozonOrderCallback(error, response, body, order_ids, order_i) {
+async function downloadOrderData(order_ids, i){
+    let promise = await new Promise((resolve, reject) => {
+        let order_id = order_ids[i];
+        if (order_id) {
+            let ozonOptions = getOzOptions('GET', appConfig.ozon.uriOrder + order_id);
+            request(ozonOptions, function (error, result, body) {
+                console.log('Загузка заказа ' + i);
+                console.log(order_id);
+                return ozonOrderCallback(error, result, body);
+            })
+            .then(() => {
+                return downloadOrderData(order_ids, i + 1);
+            });
+        } else {
+            aggregate().then(() => {
+                resolve();
+            });
+        }
+    });
+    return promise;
+}
+
+async function ozonOrderCallback(error, response, body) {
     if (body.error){
         console.log('OZ order callback ' + body.error);
-        return;
-    }
-    if (order_ids==undefined){
         return;
     }
     if (response.statusCode>200){
         console.log('Ozon. response.statusCode>200 на этапе получения заказов')
         return;
     }
-    console.log(order_i);
-    order_i += 1;
-    let orderid = order_ids[order_i];
-    if (orderid) {
-        ozonOptions.method = "GET";
-        ozonOptions.uri = appConfig.ozon.uriOrder + orderid;
-        ozonOptions.body = "";
-        request(ozonOptions, function(error, result, body) {
-            ozonOrderCallback(error, response, body, order_ids, order_i);
-        });
-    }
-    else{
-        aggregate();
-    }
-    await updateOzOrder(body);
+    updateOzOrder(body);
 }
 
 async function updateOzOrder(body){
@@ -131,7 +141,7 @@ async function updateOzOrder(body){
         order_time.setSeconds(0);
         order_time.setMilliseconds(0);
         let price = Number.parseInt(item.price);
-        connection.db.collection('sales').updateOne(
+        await connection.db.collection('sales').updateOne(
             {"item_id": item.item_id},
             {$set:{
                     tsUser:tsUser,
@@ -270,86 +280,95 @@ function wbOrderCallback(error, response, body) {
     }
 }
 
-async function aggregate(){
-    if (!connection) {
-        connection = await connector.connect();
-    }
-    let options = [
-        {'$group': {_id: {'date': '$date', 'shop':'$shop', 'tsUser':'$tsUser'},
+function aggregate(){
+    let promise = new Promise(async (resolve, reject) =>{
+        if (!connection) {
+            connection = await connector.connect();
+        }
+        let options = [
+            {'$group': {_id: {'date': '$date', 'shop':'$shop', 'tsUser':'$tsUser'},
                     //shop:'$shop',
                     'sales': {'$sum': '$sales'},
                     'costs': {'$sum': '$cost'},
                     'delivery': {'$sum': '$delivery'}
-        }}
-    ];
-    let parameters = {
-        putinto:'salesByDay',
-        collectionName:'sales',
-        options:options,
-        callback:afterAggregate
-    };
-    aggregator.aggregate(connection, parameters)
-    .then(()=>{
-        options = [
-            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                    'sales': {'$sum': '$sales'},
-                    'costs': {'$sum': '$cost'},
-                    'delivery': {'$sum': '$delivery'}
                 }}
         ];
-        parameters = {
-            putinto:'goodsByDay',
+        let parameters = {
+            putinto:'salesByDay',
             collectionName:'sales',
             options:options,
             callback:afterAggregate
         };
-        return aggregator.aggregate(connection, parameters);
-    }).then(()=>{
-        options = [
-            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                    'sales': {'$sum': '$sales'},
-                    'costs': {'$sum': '$cost'},
-                    'delivery': {'$sum': '$delivery'}
-                }}
-        ];
-        parameters = {
-            putinto:'totals',
-            collectionName:'sales',
-            options:options,
-            callback:afterAggregate
-        };
-        return aggregator.aggregate(connection, parameters);
-    }).then(()=>{
-        afterAggregate(undefined);
+        aggregator.aggregate(connection, parameters)
+            .then(()=>{
+                options = [
+                    {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                            'sales': {'$sum': '$sales'},
+                            'costs': {'$sum': '$cost'},
+                            'delivery': {'$sum': '$delivery'}
+                        }}
+                ];
+                parameters = {
+                    putinto:'goodsByDay',
+                    collectionName:'sales',
+                    options:options,
+                    callback:afterAggregate
+                };
+                return aggregator.aggregate(connection, parameters);
+            }).then(()=>{
+            options = [
+                {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                        'sales': {'$sum': '$sales'},
+                        'costs': {'$sum': '$cost'},
+                        'delivery': {'$sum': '$delivery'}
+                    }}
+            ];
+            parameters = {
+                putinto:'totals',
+                collectionName:'sales',
+                options:options,
+                callback:afterAggregate
+            };
+            return aggregator.aggregate(connection, parameters);
+        }).then(()=>{
+            afterAggregate(undefined);
+        }).then(()=>{
+            resolve();
+        });
     });
+    return promise;
 }
 
 function  afterAggregate(docs){
     //console.log('Вычисления завершены');
     if (callback){
-        callback();
+        callback(allUsers, userIterator+1);
     }
     console.log('Загрузка завершилась');
 }
 
-function collect(_connection, _userData, wb, oz, type, _callback){
-    userData = _userData;
-    tsUser   = _userData.email;
-    callback = _callback;
-    connection = _connection;
-    console.log('Загрузка началась');
-    console.log('Пользователь: ' + tsUser);
-    console.log('OZ: ' + oz);
-    console.log('WB: ' + wb);
-    console.log('TYPE: ' + type);
-    if (tsUser){
-        console.log(tsUser);
-        if (oz){
-            //ozonCollect(type);
-            ozonCollect(importTypes.all);
-        }
-        if (wb) {
-            wbCollect(type);
+function collect(_connection, _allUsers, _userIterator, wb, oz, type, _callback){
+    allUsers = _allUsers;
+    userIterator = _userIterator;
+    userData = _allUsers[_userIterator];
+    if (userData){
+        tsUser   = userData.email;
+        callback = _callback;
+        connection = _connection;
+        console.log('Загрузка началась');
+        console.log('Пользователь: ' + tsUser);
+        console.log('OZ: ' + oz);
+        console.log('WB: ' + wb);
+        console.log('TYPE: ' + type);
+        if (tsUser){
+            console.log(tsUser);
+            if (oz){
+                //ozonCollect(type);
+                ozonCollect(importTypes.all);
+            }
+            if (wb) {
+                wbCollect(type);
+            }
         }
     }
 }

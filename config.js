@@ -28,5 +28,18 @@ module.exports = {
         headerAuth: {
             'Content-Type': 'application/json'
         }
+    },
+    ozOptions:{
+        uri: '',
+        method: '',
+        body: {
+            since:'',
+            to:'',
+            delivery_schema:'fbo',
+            page:1,
+            page_size:1000
+        },
+        json: true,
+        headers: ''
     }
 }

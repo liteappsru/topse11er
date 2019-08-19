@@ -37,7 +37,7 @@ module.exports = {
             });
 	},
 	getAll: async function(connection){
-        let result = await connection.db.collection('user').find({}).toArray();
+        let result = await connection.db.collection('user').find({}).sort({email:1}).toArray();
         return result;
 	}
 };
