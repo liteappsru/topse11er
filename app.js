@@ -81,14 +81,13 @@ app.get('/import', function (req, res) {
   }
 });
 
-app.get('/users', function (req, res) {
+app.get('/users', async function (req, res) {
   if(session.validated){
     console.log(session.tsUser + ' import');
-    user.getAll(function(result){
-      if (result){
-        res.send(result);
-      }
-    });
+    let result = await user.getAll(undefined);
+    if (result){
+      res.send(result);
+    };
   }
   else{
     res.send('Не верный логин или пароль')

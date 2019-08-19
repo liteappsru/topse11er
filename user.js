@@ -30,8 +30,12 @@ module.exports = {
                 connector.client.close();
             });
 	},
-	getAll: function(connection){
-        let result = connection.db.collection('user').find({}).sort({email:1}).toArray();
+	getAll: async function(connection){
+		if (!connection){
+			connection = await require('./connector').connect();
+		}
+        let result = await
+			connection.db.collection('user').find({}).sort({email:1}).toArray();
         return result;
 	}
 };
