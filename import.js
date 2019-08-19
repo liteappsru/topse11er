@@ -3,6 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const appConfig = require('./config');
 let aggregator = require('./aggregator');
 const connector = require('./connector');
+const users = require('./user');
 let tsUser;
 let userData;
 let allUsers;
@@ -20,7 +21,10 @@ module.exports = {collect:
         function (_connection, _userData, i, wb, oz, type, _callback) {
             collect(_connection, _userData, i, wb, oz, type, _callback);
         },
-        importTypes: importTypes
+        importTypes: importTypes,
+        doCollect:function (req,res){
+            doCollect(req,res).then(res.send('done'));
+        }
     };
 
 function getOzOptions(method, uri, type = undefined){
@@ -373,6 +377,23 @@ function collect(_connection, _allUsers, _userIterator, wb, oz, type, _callback)
     }
 }
 
-//aggregate();
+async function doCollect(req, res) {
 
-//collect();
+    connection = await connector.connect();
+    let allUsers = await users.getAll(connection);
+
+    collectNext(allUsers,0);
+
+};
+
+function collectNext(allUsers, i){
+    if (i==allUsers.length){
+        closeConnection();
+        return;
+    }
+    collect(connection, allUsers, i, false, true, importTypes.last, collectNext);
+}
+
+function closeConnection(){
+    connection.client.close();
+}
