@@ -5,10 +5,15 @@ let appConfig = require('./config');
 async function getMongoClient () {
     let client;
     let db;
-    client = await MongoClient.connect(appConfig.url);
-    db = client.db(appConfig.dbName);
-    return {client:client,
-        db:db}
+    try {
+        client = await MongoClient.connect(appConfig.url);
+        db = client.db(appConfig.dbName);
+        return {client:client,
+            db:db}
+    }
+    catch (e) {
+        console.log(e.message);
+    }
 }
 
 module.exports = {
