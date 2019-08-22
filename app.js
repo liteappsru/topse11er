@@ -73,17 +73,17 @@ app.get('/aggregate', function (req, res) {
 });
 
 app.get('/users/all', function (req, res) {
-  if(session.validated){
+  //if(session.validated){
     console.log(session.tsUser + ' users');
     user.getAll(undefined).then((result)=>{
       if (result){
         res.send(result);
       };
     });
-  }
-  else{
-    res.send('Не верный логин или пароль')
-  }
+  // }
+  // else{
+  //   res.send('Не верный логин или пароль')
+  // }
 });
 
 app.get('/admin', function (req, res) {
