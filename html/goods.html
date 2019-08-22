@@ -68,13 +68,10 @@
                       <thead>
                       <tr class="solid-header">
                         <th>id</th>
-                        <th>Имя</th>
-                        <th>Логин</th>
-                        <th>Пароль</th>
-                        <th>ozonClientId</th>
-                        <th>ozonApiKey</th>
-                        <th>wbUserName</th>
-                        <th>wbPassword</th>
+                        <th>Магазин</th>
+                        <th>Артикул</th>
+                        <th>Наименование</th>
+                        <th>Себестоимость</th>
                       </tr>
                       </thead>
                       <tbody id="salesDetails">
@@ -132,27 +129,17 @@
             innHTML += '<small>'+item._id+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.name+'</small>';
+            innHTML += '<small>'+item.shop+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.email+'</small>';
+            innHTML += '<small>'+item.product_id+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.password+'</small>';
+            innHTML += '<small>'+item.product_name+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.ozonClientId+'</small>';
+            innHTML += '<small>'+item.cost+'</small>';
             innHTML += '</td>';
-            innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.ozonApiKey+'</small>';
-            innHTML += '</td>';
-            innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.wbUserName+'</small>';
-            innHTML += '</td>';
-            innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.wbPassword+'</small>';
-            innHTML += '</td>';
-            innHTML += '</tr>';
           }
           var container = document.getElementById('salesDetails');
           container.innerHTML = innHTML;

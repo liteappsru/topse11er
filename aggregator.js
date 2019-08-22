@@ -13,8 +13,11 @@ module.exports = {aggregate:
         if (parameters.putinto == 'goodsByDay'){
             saveGoodsByDay(docs, parameters);
         }
-        else {
+        else if (parameters.putinto == 'salesByDay') {
             saveDataByDay(docs, parameters);
+        }
+        else if (parameters.putinto == 'goods') {
+            saveGoods(docs, parameters);
         }
     }
 };
@@ -108,6 +111,43 @@ async function saveGoodsByDay(docs, parameters){
                         profit: profit,
                         margin: margin,
                         costs: costs,
+                    }
+                }
+                , {upsert: true}
+            )
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    if (closeConnection){
+        connection.client.close();
+    }
+}
+
+async function saveGoods(docs, parameters){
+    if (!docs){
+        console.log('Нет данных для сохранения');
+        return;
+    }
+
+    let closeConnection = false;
+
+    for (let i = 0; i < docs.length; i++) {
+        try {
+            let item = docs[i];
+            if (connection.client.closed)
+            {
+                connection = await connector.connect();
+                closeConnection = true;
+            }
+            await connection.db.collection(parameters.putinto).updateOne(
+                {dim: item._id.product_id},
+                {
+                    $set: {
+                        product_id:item._id.product_id,
+                        shop:item._id.shop,
+                        tsUser:item._id.tsUser,
+                        product_name:item._id.product_name
                     }
                 }
                 , {upsert: true}

@@ -309,47 +309,56 @@ function aggregate(){
             options:options,
             callback:afterAggregate
         };
-        aggregator.aggregate(connection, parameters)
-            .then(()=>{
-                options = [
-                    {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                            'sales': {'$sum': '$sales'},
-                            'costs': {'$sum': '$cost'},
-                            'delivery': {'$sum': '$delivery'}
-                        }}
-                ];
-                parameters = {
-                    putinto:'goodsByDay',
-                    collectionName:'sales',
-                    options:options,
-                    callback:afterAggregate
-                };
-                return aggregator.aggregate(connection, parameters);
-            }).then(()=>{
-            options = [
-                {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
-                        'sales': {'$sum': '$sales'},
-                        'costs': {'$sum': '$cost'},
-                        'delivery': {'$sum': '$delivery'}
-                    }}
-            ];
-            parameters = {
-                putinto:'totals',
-                collectionName:'sales',
-                options:options,
-                callback:afterAggregate
-            };
-            return aggregator.aggregate(connection, parameters);
-        }).then(()=>{
-            afterAggregate(undefined);
-        }).then(()=>{
-            resolve();
-        });
+        await aggregator.aggregate(connection, parameters)
+
+        options = [
+            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                    'sales': {'$sum': '$sales'},
+                    'costs': {'$sum': '$cost'},
+                    'delivery': {'$sum': '$delivery'}
+                }}
+        ];
+        parameters = {
+            putinto:'goodsByDay',
+            collectionName:'sales',
+            options:options,
+            callback:afterAggregate
+        };
+        await aggregator.aggregate(connection, parameters);
+
+        options = [
+            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser'},
+                    'sales': {'$sum': '$sales'},
+                    'costs': {'$sum': '$cost'},
+                    'delivery': {'$sum': '$delivery'}
+                }}
+        ];
+        parameters = {
+            putinto:'totals',
+            collectionName:'sales',
+            options:options,
+            callback:afterAggregate
+        };
+        await aggregator.aggregate(connection, parameters);
+
+        options = [
+            {'$group': {_id: {'product_id': '$product_id', 'shop':'$shop', 'tsUser':'$tsUser', 'product_name':'$product_name'}}}
+        ];
+        parameters = {
+            putinto:'goods',
+            collectionName:'sales',
+            options:options,
+            callback:afterAggregate
+        };
+        await aggregator.aggregate(connection, parameters);
+
+        afterAggregate();
+
     });
     return promise;
 }
 
-function  afterAggregate(docs){
+function  afterAggregate(){
     //console.log('Вычисления завершены');
     if (callback){
         callback(allUsers, userIterator+1);

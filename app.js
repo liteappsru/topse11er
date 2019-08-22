@@ -4,7 +4,7 @@ let bodyParser = require("body-parser");
 let user = require('./user');
 let exprSession = require('express-session');
 let importjs = require('./import');
-let reports = require('./reports');
+let goods = require('./goods');
 let session = require('./session');
 
 const app = express();
@@ -26,9 +26,10 @@ app.post('/signin', function (req, res) {
   user.validateSignIn(user_name,password).then((result)=>{
     if(result){
       session.username = user_name;
+      session.tsUser = user_name;
       session.validated = true;
       console.log(Date.now() + ' авторизация: ' + user_name);
-      res.send('Success')
+      res.send('Success');
     }
     else{
       res.send('Не верный логин или пароль')
@@ -49,6 +50,7 @@ app.post('/signup', function (req, res) {
   if(name && email && password){
   	user.signup(name, email, password,ozonClientId,ozonApiKey,wbUserName,wbPassword);
     sessions.username = email;
+    sessions.tsUser = email;
     console.log(Date.now() + ' регистрация: ' + email);
     res.send('Success');
   }
@@ -95,6 +97,7 @@ app.get('/admin', function (req, res) {
 
 app.get('/goods/byUser', function (req, res) {
   if(session.validated){
+    console.log(session);
     console.log(session.tsUser + ' goods');
     goods.byUser(session.tsUser).then((result)=>{
       if (result){
