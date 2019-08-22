@@ -18,11 +18,13 @@ module.exports = {
 		});
 	},
 	validateSignIn: function(username, password){
+		console.log(username);
+		console.log(password);
 		let promise = new Promise(async(resolve,  reject)=>{
 			try {
 				const connector = await require('./connector').connect();
-				connector.db.collection('user').findOne( { email : username ,password: password
-				}).then((docs)=>{
+				connector.db.collection('user').findOne({email:username,password: password})
+					.then((docs)=>{
 					if (docs){
 						resolve(true);
 					}
@@ -33,7 +35,7 @@ module.exports = {
 				});
 			}
 			catch (e) {
-				reject(e);
+				reject(e.message);
 			}
 		});
 		return promise;
