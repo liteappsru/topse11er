@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="topse11er.ru">
+    <meta name="description" content="topse11er.ru список пользователей">
     <meta name="author" content="liteapps.ru">
     <title>Topse11er Панель управления</title>
     <!-- plugins:css -->
@@ -56,58 +56,16 @@
               </div>
             </div>
 
-            <div class="row" id="commonPanels">
-              <div class="col-md-3 col-sm-6 col-12 equel-grid">
-                <div class="grid bgGreen">
-                  <div class="grid-body text-gray">
-                    <p class="text-black"><strong>Сегодня</strong></p>
-                    <div class="d-flex justify-content-between">
-                      <p id="salesCommon">Выручка:</p>
-                      <p>+тут будет дельта в %</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p id="profitCommon">Прибыль:</p>
-                      <p>+тут будет дельта в %</p>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                      <p id="marginCommon">Маржа:</p>
-                      <p>+тут будет дельта в %</p>
-                    </div>
-                  </div>
-                </div>
+            <div class="row">
+              <div class="col-sm-6 text-center text-sm-right order-sm-1">
+
               </div>
-              <div class="col-md-3 col-sm-6 col-12 equel-grid">
-                <div class="grid bgBlue">
-                  <div class="grid-body text-gray">
-                    <p class="text-black"><strong>Вчера</strong></p>
-                    <div class="d-flex justify-content-between">
-                      <p>Сумма</p>
-                      <p>+Прирост</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 col-sm-6 col-12 equel-grid">
-                <div class="grid bgViolet">
-                  <div class="grid-body text-gray">
-                    <p class="text-black"><strong>Текущий месяц</strong></p>
-                    <div class="d-flex justify-content-between">
-                      <p>Сумма</p>
-                      <p>+Прирост</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-3 col-sm-6 col-12 equel-grid">
-                <div class="grid bgYellow">
-                  <div class="grid-body text-gray">
-                    <p class="text-black"><strong>Прошлый месяц</strong></p>
-                    <div class="d-flex justify-content-between">
-                      <p>Сумма</p>
-                      <p>- Прирост</p>
-                    </div>
-                  </div>
-                </div>
+              <div class="col-sm-6 text-center text-sm-left mt-3 mt-sm-0">
+                <a href="/collect/totals" target="_blank">Заполнить итоги</a>
+                <br>
+                <a href="/collect/goods" target="_blank">Заполнить товары</a>
+                <br>
+                <a href="/collect/all" target="_blank">Скачать все</a>
               </div>
             </div>
 
@@ -115,69 +73,21 @@
               <div class="col-md-12 equel-grid">
                 <div class="grid">
                   <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Выручка по дням</p>
-                    <div class="chartdiv1" style="height: 500px;">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 equel-grid">
-                <div class="grid">
-                  <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Прибыль по дням</p>
-                    <div class="chartdiv2" style="height: 500px;">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 equel-grid">
-                <div class="grid">
-                  <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Маржинальность по дням</p>
-                    <div class="chartdiv3" style="height: 500px;">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 equel-grid">
-                <div class="grid">
-                  <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Маржинальность по товарам</p>
-                    <div class="chartdiv4" style="height: 500px;">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 equel-grid">
-                <div class="grid">
-                  <div class="grid-body py-3">
-                    <p class="card-title ml-n1">Заказы</p>
+                    <p class="card-title ml-n1">Пользователи</p>
                   </div>
 
                   <div class="table-responsive">
                     <table class="table table-hover table-sm">
                       <thead>
                       <tr class="solid-header">
-                        <th>Дата</th>
-                        <th>Магазин</th>
-                        <th>Артикул</th>
-                        <th>Наименование</th>
-                        <th>Кол-во</th>
-                        <th>Цена</th>
-                        <th>Затраты</th>
-                        <th>Доставка</th>
+                        <th>id</th>
+                        <th>Имя</th>
+                        <th>Логин</th>
+                        <th>Пароль</th>
+                        <th>ozonClientId</th>
+                        <th>ozonApiKey</th>
+                        <th>wbUserName</th>
+                        <th>wbPassword</th>
                       </tr>
                       </thead>
                       <tbody id="salesDetails">
@@ -226,34 +136,34 @@
     <!-- Chart code -->
     <script>
       let innHTML = '';
-      axios.get('/report/users')
+      axios.get('/users/all')
         .then(function (response) {
           for (let i=0;i<response.data.length; i++){
             let item = response.data[i];
             innHTML += '<tr>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.date+'</small>';
+            innHTML += '<small>'+item._id+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.shop+'</small>';
+            innHTML += '<small>'+item.name+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.product_id+'</small>';
+            innHTML += '<small>'+item.email+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.product_name+'</small>';
+            innHTML += '<small>'+item.password+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.quantity+'</small>';
+            innHTML += '<small>'+item.ozonClientId+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.sales+'</small>';
+            innHTML += '<small>'+item.ozonApiKey+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.cost+'</small>';
+            innHTML += '<small>'+item.wbUserName+'</small>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.delivery+'</small>';
+            innHTML += '<small>'+item.wbPassword+'</small>';
             innHTML += '</td>';
             innHTML += '</tr>';
           }
