@@ -66,16 +66,6 @@ app.get('/home', function (req, res) {
   }  
 });
 
-app.get('/import', function (req, res) {
-  if(session.validated){
-    console.log(session.tsUser + ' import');
-    res.send(importjs.collect(session.tsUser));
-  }
-  else{
-    res.send('Не верный логин или пароль')
-  }
-});
-
 app.get('/aggregate', function (req, res) {
   importjs.aggregate(req,res);
 });
@@ -124,6 +114,24 @@ app.get('/goods', function (req, res) {
   else{
     res.send('Ошибка авторизации');
   };
+});
+
+app.get('/collect/all', function (req, res) {
+    if(session.validated){
+        res.send(importjs.collectAll(req, res));
+    }
+    else{
+        res.send('Ошибка авторизации');
+    };
+});
+
+app.get('/collect/totals', function (req, res) {
+    if(session.validated){
+        res.send(importjs.aggregate(req, res));
+    }
+    else{
+        res.send('Ошибка авторизации');
+    };
 });
 
 app.listen(7777,function(){
