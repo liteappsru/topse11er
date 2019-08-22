@@ -49,8 +49,8 @@ app.post('/signup', function (req, res) {
   console.log(name);
   if(name && email && password){
   	user.signup(name, email, password,ozonClientId,ozonApiKey,wbUserName,wbPassword);
-    sessions.username = email;
-    sessions.tsUser = email;
+    session.username = email;
+    session.tsUser = email;
     console.log(Date.now() + ' регистрация: ' + email);
     res.send('Success');
   }
