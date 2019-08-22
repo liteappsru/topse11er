@@ -23,7 +23,7 @@ app.post('/signin', function (req, res) {
   let user_name=req.body.email;
   let password=req.body.password;
 
-  user.validateSignIn(user_name,password,function(result){
+  user.validateSignIn(user_name,password).then((result)=>{
     if(result){
       session.username = user_name;
       session.validated = true;
@@ -34,11 +34,6 @@ app.post('/signin', function (req, res) {
       res.send('Не верный логин или пароль')
     }
   });
-  if (session.validated){
-  }
-  else {
-   //res.send(session.e)
-  }
 });
 
 app.post('/signup', function (req, res) {
@@ -81,21 +76,31 @@ app.get('/import', function (req, res) {
   }
 });
 
-app.get('/aggregate', async function (req, res) {
+app.get('/aggregate', function (req, res) {
   importjs.aggregate(req,res);
 });
 
-app.get('/users', async function (req, res) {
+app.get('/users/all', function (req, res) {
   if(session.validated){
-    console.log(session.tsUser + ' import');
-    let result = await user.getAll(undefined);
-    if (result){
-      res.send(result);
-    };
+    console.log(session.tsUser + ' users');
+    user.getAll(undefined).then((result)=>{
+      if (result){
+        res.send(result);
+      };
+    });
   }
   else{
     res.send('Не верный логин или пароль')
   }
+});
+
+app.get('/users', function (req, res) {
+  if(session.validated){
+    res.sendFile(__dirname + '/html/users.html');
+  }
+  else{
+    res.send('Ошибка авторизации');
+  };
 });
 
 app.listen(7777,function(){
