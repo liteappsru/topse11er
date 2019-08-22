@@ -94,9 +94,32 @@ app.get('/users/all', function (req, res) {
   }
 });
 
-app.get('/users', function (req, res) {
+app.get('/admin', function (req, res) {
   if(session.validated){
-    res.sendFile(__dirname + '/html/users.html');
+    res.sendFile(__dirname + '/html/admin.html');
+  }
+  else{
+    res.send('Ошибка авторизации');
+  };
+});
+
+app.get('/goods/byUser', function (req, res) {
+  if(session.validated){
+    console.log(session.tsUser + ' goods');
+    goods.byUser(session.tsUser).then((result)=>{
+      if (result){
+        res.send(result);
+      };
+    });
+  }
+  else{
+    res.send('Не верный логин или пароль')
+  }
+});
+
+app.get('/goods', function (req, res) {
+  if(session.validated){
+    res.sendFile(__dirname + '/html/goods.html');
   }
   else{
     res.send('Ошибка авторизации');
