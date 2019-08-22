@@ -2,7 +2,7 @@ module.exports = {
     dbName: 'topse11er',
     url: 'mongodb://localhost:27017/topse11er',
     ozon:{
-        since:'2019-07-01T00:00:00.032Z',
+        since:'2019-08-01T00:00:00.032Z',
         to:'2020-08-01T00:00:00.033Z',
         method: "POST",
         uri: "https://api-seller.ozon.ru/v1/order/list",
