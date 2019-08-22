@@ -17,25 +17,31 @@ module.exports = {
 			connector.client.close();
 		});
 	},
-	validateSignIn: async function(username, password, callback){
-        const connector = await require('./connector').connect();
-        connector.db.collection('user').findOne( { email : username ,password: password
-            },function(err, result){
-                if(result==null){
-                    callback(false)
-                }
-                else{
-                    callback(true)
-                }
-                connector.client.close();
-            });
+	validateSignIn: function(username, password){
+		let promise = new Promise(async(resolve,  reject)=>{
+			try {
+				const connector = await require('./connector').connect();
+				connector.db.collection('user').findOne( { email : username ,password: password
+				}).then((docs)=>{
+					if (docs){
+						resolve(true);
+					}
+					else {
+						resolve(false);
+					}
+					connector.client.close();
+				});
+			}
+			catch (e) {
+				reject(e);
+			}
+		});
+		return promise;
 	},
 	getAll: async function(connection){
-		if (!connection){
-			connection = await require('./connector').connect();
-		}
-        let result = await
-			connection.db.collection('user').find({}).sort({email:1}).toArray();
+		connection = await require('./connector').connect();
+        let result = await connection.db.collection('user').find({}).sort({email:1}).toArray();
+		connection.client.close();
         return result;
 	}
 };
