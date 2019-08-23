@@ -52,6 +52,7 @@ app.post('/signup', function (req, res) {
     session.username = email;
     session.tsUser = email;
     console.log(Date.now() + ' регистрация: ' + email);
+    console.log(Date.now() + ' регистрация: ' + password);
     res.send('Success');
   }
   else{
