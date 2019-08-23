@@ -136,9 +136,11 @@
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
             innHTML += '<small>'+item.product_name+'</small>';
+            innHTML += '<input type="text" onChange={} {id="inputName"+item._id} className="form-control" placeholder="укажите наименование" required autofocus><small>'+item.product_name+'</small></imput>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item.cost+'</small>';
+            // innHTML += '<small>'+item.cost+'</small>';
+            innHTML += '<input type="text" onChange={} {id="inputCost"+item._id} className="form-control" placeholder="введите сумму" required autofocus><small>'+item.cost+'</small></imput>';
             innHTML += '</td>';
           }
           var container = document.getElementById('salesDetails');
