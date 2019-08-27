@@ -214,9 +214,17 @@ class Signup extends React.Component{
   }
 }
 
+class Goods1 extends React.Component {
+    render(){
+        return (
+            <div>тест</div>
+        )
+    }
+}
 ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={Signin} path="/"></Route>
         <Route component={Signup} path="/signup"></Route>
+        <Route component={Goods1} path="/Goods1"></Route>
     </Router>,
 document.getElementById('app'));

@@ -120,6 +120,30 @@ app.get('/goods', function (req, res) {
   };
 });
 
+app.get('/stock/all', function (req, res) {
+  if(session.validated){
+    console.log(session);
+    console.log(session.tsUser + ' goods');
+    goods.byUser(session.tsUser).then((result)=>{
+      if (result){
+        res.send(result);
+      };
+    });
+  }
+  else{
+    res.send('Не верный логин или пароль')
+  }
+});
+
+app.get('/stock', function (req, res) {
+  if(session.validated){
+    res.sendFile(__dirname + '/html/stock.html');
+  }
+  else{
+    res.send('Ошибка авторизации');
+  };
+});
+
 app.get('/collect/all', function (req, res) {
     if(session.validated){
         res.send(importjs.collectAll(req, res));
