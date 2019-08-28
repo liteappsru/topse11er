@@ -78,7 +78,7 @@
                     <table class="table table-hover table-sm">
                       <thead>
                       <tr class="solid-header">
-                        <th>id</th>
+                        <th>Действия</th>
                         <th>Имя</th>
                         <th>Логин</th>
                         <th>Пароль</th>
@@ -133,14 +133,17 @@
 <!--    <script type="text/babel" src="components/commonPanels.jsx"></script>-->
     <!-- Chart code -->
     <script>
-      let innHTML = '';
+      function download(email){
+        axios.get('/collect/byUser?user='+email);
+      };
       axios.get('/users/all')
         .then(function (response) {
+          let innHTML = '';
           for (let i=0;i<response.data.length; i++){
             let item = response.data[i];
             innHTML += '<tr>';
             innHTML += '<td class="pr-0 pl-4">';
-            innHTML += '<small>'+item._id+'</small>';
+            innHTML += '<button class="btn btn-primary w-50 mr-2" onClick=download("'+item.email+'") type="button">Скачать</button>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
             innHTML += '<small>'+item.name+'</small>';

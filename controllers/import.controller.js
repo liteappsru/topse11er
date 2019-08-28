@@ -13,6 +13,21 @@ exports.allByUser = function (req, res) {
     }
 };
 
+exports.byUser = async function (req, res) {
+    if (req.query.user){
+        await res.send(imports.collectByUser(req.query.user));
+        res.send('import by User ' + req.query.user);
+    }
+    //let sessions=req.session;
+    // if(sessions && sessions.username){
+    //     console.log(sessions.username + ' import');
+    //     ;
+    // }
+    // else{
+    //     res.send('Не верный логин или пароль')
+    // }
+};
+
 exports.all = async function (req, res) {
     await imports.collectAll(req,res);
     res.send('import All');

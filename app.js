@@ -15,7 +15,7 @@ const reports_route = require('./routes/report.route');
 app.use(express.static(path.join(__dirname,"/html")));
 app.use(exprSession({secret: 'topse11er'}));
 app.use(bodyParser.json());
-app.use('/import', import_route);
+app.use('/collect', import_route);
 app.use('/report', reports_route);
 
 app.post('/signin', function (req, res) {
@@ -144,14 +144,14 @@ app.get('/stock', function (req, res) {
   };
 });
 
-app.get('/collect/all', function (req, res) {
-    if(session.validated){
-        res.send(importjs.collectAll(req, res));
-    }
-    else{
-        res.send('Ошибка авторизации');
-    };
-});
+// app.get('/collect/all', function (req, res) {
+//     if(session.validated){
+//         res.send(importjs.collectAll(req, res));
+//     }
+//     else{
+//         res.send('Ошибка авторизации');
+//     };
+// });
 
 app.get('/collect/totals', function (req, res) {
     if(session.validated){

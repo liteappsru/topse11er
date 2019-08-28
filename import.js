@@ -28,6 +28,9 @@ module.exports = {collect:
         collectAll:function (req,res){
             collectAll(req,res);
         },
+        collectByUser:function (req,res){
+            collectByUser(req,res);
+        },
         aggregate:function (req,res){
             aggregate().then(()=>{res.send('done')});
     }
@@ -409,6 +412,13 @@ async function collectAll(req, res) {
     collectNext(allUsers,0, importTypes.last);
 
 };
+
+async function collectByUser(email){
+    let importType = importTypes.last
+    connection = await connector.connect();
+    let allUsers = await users.getUser(connection, email);
+    collect(connection, allUsers, 0, false, true, importType, collectNext);
+}
 
 function collectNext(allUsers, i, importType){
     if (i==allUsers.length){

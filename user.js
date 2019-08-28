@@ -54,5 +54,11 @@ module.exports = {
         let result = await connection.db.collection('user').find({}).sort({email:1}).toArray();
 		connection.client.close();
         return result;
+	},
+	getUser: async function(connection, email){
+		connection = await require('./connector').connect();
+		let result = await connection.db.collection('user').find({email:email}).sort({email:1}).toArray();
+		connection.client.close();
+		return result;
 	}
 };
