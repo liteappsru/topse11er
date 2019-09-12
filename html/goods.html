@@ -119,6 +119,14 @@
 <!--    <script type="text/babel" src="components/commonPanels.jsx"></script>-->
     <!-- Chart code -->
     <script>
+        function saveGoodData(id, value, field){
+            if (field=="name"){
+                axios.post('/goods/update?name = ' + value);
+            }
+            else if (field=="cost"){
+                axios.post('/goods/update?cost = ' + value);
+            }
+        }
       let innHTML = '';
       axios.get('/goods/byUser')
         .then(function (response) {
@@ -136,11 +144,11 @@
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
             innHTML += '<small>'+item.product_name+'</small>';
-            innHTML += '<input type="text" onChange={} {id="inputName"+item._id} className="form-control" placeholder="укажите наименование" required autofocus><small>'+item.product_name+'</small></imput>';
+            innHTML += '<input type="text" onChange=saveGoodData(this, item._id, "name") class="form-control" placeholder="укажите наименование" required autofocus><small>'+item.product_name+'</small></imput>';
             innHTML += '</td>';
             innHTML += '<td class="pr-0 pl-4">';
             // innHTML += '<small>'+item.cost+'</small>';
-            innHTML += '<input type="text" onChange={} {id="inputCost"+item._id} className="form-control" placeholder="введите сумму" required autofocus><small>'+item.cost+'</small></imput>';
+            innHTML += '<input type="text" onChange=saveGoodData(this, item._id, "cost") class="form-control" placeholder="введите сумму" required autofocus><small>'+item.cost+'</small></imput>';
             innHTML += '</td>';
           }
           let container = document.getElementById('salesDetails');
