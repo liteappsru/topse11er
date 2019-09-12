@@ -2,6 +2,7 @@ let Router = window.ReactRouter.Router;
 let Route = window.ReactRouter.Route;
 let hashHistory = window.ReactRouter.hashHistory;
 let Link = window.ReactRouter.Link;
+//const stock = require('stock');
 
 class Signin extends React.Component {
     constructor(props) {
@@ -221,6 +222,15 @@ class Goods1 extends React.Component {
         )
     }
 }
+
+class stock extends React.Component {
+    render(){
+        return (
+            <div>тест</div>
+        )
+    }
+}
+
 ReactDOM.render(
     <Router history={hashHistory}>
         <Route component={Signin} path="/"></Route>
